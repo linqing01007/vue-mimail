@@ -5,11 +5,18 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-
+import axios from 'axios'
+// import jsonp from 'jsonp'
 export default {
   name: 'App',
   components: {
     HelloWorld
+  },
+  mounted () {
+    const url = '/search/hotwords'
+    axios.get(url).then(res=> {
+      console.log(res)
+    })
   }
 }
 </script>
