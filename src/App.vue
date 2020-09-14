@@ -6,6 +6,7 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import axios from 'axios'
+import storage from './storage'
 // import jsonp from 'jsonp'
 export default {
   name: 'App',
@@ -17,6 +18,9 @@ export default {
     axios.get(url).then(res=> {
       console.log(res)
     })
+    storage.setItem('user', {'name': 'nhq', 'age': 23})
+    storage.setItem('session', {'name': 'test'})
+    storage.clear('name', 'user')
   }
 }
 </script>
