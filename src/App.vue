@@ -7,7 +7,20 @@
     <router-view/>
   </div>
 </template>
-
+<script>
+import axios from 'axios'
+export default {
+  name: 'app',
+  mounted () {
+    const baseURL = '/article'
+    axios.get(baseURL).then(res => {
+      console.log('axios res: ', res)
+    }).catch(err => {
+      console.log('err2: ', err)
+    })
+  }
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
