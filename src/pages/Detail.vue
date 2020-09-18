@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-    name: 'detail',
-    props: ['id']
+  name: 'detail',
+  props: ['id']
 }
 </script>

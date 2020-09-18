@@ -6,13 +6,13 @@
     </div>
 </template>
 <script>
-import NavFooter from '@/componnets/NavFooter'
-import OrderHeader from '@/componnets/OrderHeader'
+import NavFooter from '@/components/NavFooter'
+import OrderHeader from '@/components/OrderHeader'
 export default {
-    name: 'cart',
-    components: {
-        'order-header': OrderHeader,
-        'nav-footer': NavFooter
-    }
+  name: 'cart',
+  components: {
+    'order-header': OrderHeader,
+    'nav-footer': NavFooter
+  }
 }
 </script>

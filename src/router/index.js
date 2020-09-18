@@ -7,7 +7,7 @@ import Detail from '../pages/Detail'
 import Cart from '../pages/Cart'
 import Order from '../pages/Order'
 import OrderList from '../pages/OrderList'
-import OrderComfirm from '../pages/OrderComfirm'
+import OrderConfirm from '../pages/OrderConfirm'
 import OrderPay from '../pages/OrderPay'
 import User from '../pages/User'
 import UserLogin from '../pages/UserLogin'
@@ -20,6 +20,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+    redirect: 'index',
     children: [
       {
         path: 'index',
@@ -58,7 +59,7 @@ const routes = [
       {
         path: 'confirm',
         name: 'confirm',
-        component: OrderComfirm
+        component: OrderConfirm
       },
       {
         path: 'alipay',
@@ -96,5 +97,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
+console.log('33333333', router)
 export default router

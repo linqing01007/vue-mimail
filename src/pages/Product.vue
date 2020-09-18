@@ -1,11 +1,9 @@
 <template>
-    <div>
-      product: {{id}}
-    </div>
+  <div>product: {{id}}</div>
 </template>
 <script>
 export default {
-    name: 'product',
-    props: ['id']
+  name: 'product',
+  props: ['id']
 }
 </script>

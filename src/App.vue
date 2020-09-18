@@ -1,10 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view></router-view>
   </div>
 </template>
 <script>
@@ -21,9 +17,11 @@ export default {
   mounted () {
     axios.get('/user/login').then(res => {
       this.res = res
+    }).catch(err => {
+      console.log('axios get error：', err)
     })
-    storage.setItem('user', {'name': 'nhq', 'age': 23})
-    storage.setItem('session', {'name': 'test'})
+    storage.setItem('user', { name: 'nhq', age: 23 })
+    storage.setItem('session', { name: 'test' })
     storage.clear('name', 'user')
   }
 }
