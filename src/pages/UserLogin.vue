@@ -1,10 +1,10 @@
 <template>
     <div>
-      index
+      userLogin
     </div>
 </template>
 <script>
 export default {
-    name: 'index'
+    name: 'userLogin'
 }
 </script>
