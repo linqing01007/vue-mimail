@@ -4,6 +4,13 @@ import axios from 'axios'
 import vueAxios from 'vue-axios'
 import App from './App.vue'
 
+const mock = true
+if (mock) {
+  require('./mock/api')
+}
+
+axios.defaults.baseURL = '/api'
+axios.defaults.timeout = 10
 axios.interceptors.request.use(function (config) {
   console.log('axios interceptors request: ', config)
 })

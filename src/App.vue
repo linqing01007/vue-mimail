@@ -11,12 +11,14 @@
 import axios from 'axios'
 export default {
   name: 'app',
+  data () {
+    return {
+      res: {}
+    }
+  },
   mounted () {
-    const baseURL = '/article'
-    axios.get(baseURL).then(res => {
-      console.log('axios res: ', res)
-    }).catch(err => {
-      console.log('err2: ', err)
+    axios.get('/user/login').then(res => {
+      this.res = res
     })
   }
 }
