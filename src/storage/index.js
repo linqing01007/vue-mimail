@@ -25,6 +25,7 @@ export default {
         let val = this.getStorage()
         if (module_name) {
             console.log('1111', val[module_name])
+            if (!val[module_name]) reutrn
             delete val[module_name][key]
         } else {
             delete val[key]
