@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-view/>
   </div>
 </template>
 <script>
@@ -17,8 +17,6 @@ export default {
   mounted () {
     axios.get('/user/login').then(res => {
       this.res = res
-    }).catch(err => {
-      console.log('axios get error：', err)
     })
     storage.setItem('user', { name: 'nhq', age: 23 })
     storage.setItem('session', { name: 'test' })
@@ -27,24 +25,6 @@ export default {
 }
 </script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+@import './assets/scss/config.scss';
+@import './assets/scss/reset.scss';
 </style>

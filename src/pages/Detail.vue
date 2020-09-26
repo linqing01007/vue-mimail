@@ -1,7 +1,5 @@
 <template>
-    <div>
-      detail: {{id}}
-    </div>
+  <div>detail: {{id}}</div>
 </template>
 <script>
 export default {

@@ -4,6 +4,7 @@ import axios from 'axios'
 import vueAxios from 'vue-axios'
 import App from './App.vue'
 
+Vue.use(vueAxios, axios)
 const mock = true
 if (mock) {
   require('./mock/api')
@@ -13,7 +14,7 @@ axios.defaults.baseURL = '/api'
 axios.defaults.timeout = 10
 axios.interceptors.request.use(function (config) {
   console.log('axios interceptors request: ', config)
-  // request拦截要返回Config
+  // request拦截需要返回config
   return config
 })
 // 接口错误拦截
@@ -29,8 +30,7 @@ axios.interceptors.response.use(function (response) {
   }
 })
 Vue.config.productionTip = false
-Vue.use(vueAxios, axios)
-// console.log('222222', router)
+
 new Vue({
   router,
   render: h => h(App)

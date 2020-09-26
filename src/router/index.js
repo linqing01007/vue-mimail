@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../pages/Home.vue'
 import Index from '../pages/Index'
 import Product from '../pages/Product'
 import Detail from '../pages/Detail'
@@ -20,7 +20,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    redirect: 'index',
+    redirect: '/index',
     children: [
       {
         path: 'index',
@@ -97,5 +97,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-console.log('33333333', router)
+
 export default router

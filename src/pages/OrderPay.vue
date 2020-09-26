@@ -3,6 +3,6 @@
 </template>
 <script>
 export default {
-  name: 'orderPay'
+  name: 'rderPay'
 }
 </script>
