@@ -26,6 +26,52 @@
         <div class="header-menu">
           <div class="item-menu">
             <span>小米手机</span>
+            <div class="children">
+              <ul>
+                <li>
+                  <div class="image">
+                    <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="小米10至尊纪念版">
+                  </div>
+                  <div>小米10至尊纪念版</div>
+                  <div>5299元起</div>
+                </li>
+                <li>
+                  <div class="image">
+                    <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="小米10至尊纪念版">
+                  </div>
+                  <div>小米10至尊纪念版</div>
+                  <div>5299元起</div>
+                </li>
+                <li>
+                  <div class="image">
+                    <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="小米10至尊纪念版">
+                  </div>
+                  <div>小米10至尊纪念版</div>
+                  <div>5299元起</div>
+                </li>
+                <li>
+                  <div class="image">
+                    <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="小米10至尊纪念版">
+                  </div>
+                  <div>小米10至尊纪念版</div>
+                  <div>5299元起</div>
+                </li>
+                <li>
+                  <div class="image">
+                    <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="小米10至尊纪念版">
+                  </div>
+                  <div>小米10至尊纪念版</div>
+                  <div>5299元起</div>
+                </li>
+                <li>
+                  <div class="image">
+                    <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="小米10至尊纪念版">
+                  </div>
+                  <div>小米10至尊纪念版</div>
+                  <div>5299元起</div>
+                </li>
+              </ul>
+            </div>
           </div>
           <div class="item-menu">
             <span>Redmi红米</span>
@@ -51,15 +97,14 @@ export default {
 </script>
 <style lang="scss">
   @import '../assets/scss/base.scss';
+  @import '../assets/scss/mixin.scss';
   .header {
     .nav-topbar {
       height: 39px;
       line-height: 39px;
       background-color: #333333;
       .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        @include flex();
         a {
           display: inline-block;
           color: #b0b0b0;
@@ -72,11 +117,8 @@ export default {
           color: #ffffff;
           .icon-cart {
             display: inline-block;
-            width: 16px;
-            height: 12px;
+            @include bgImg(16px, 12px, '../images/icon-cart-checked.png');
             margin-right: 4px;
-            background: url('../images/icon-cart-checked.png') no-repeat center;
-            background-size: contain;
           }
         }
       }
@@ -84,9 +126,7 @@ export default {
     .nav-header {
       .container {
         height: 112px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        @include flex();
         .header-logo {
           display: inline-block;
           width: 55px;
@@ -98,20 +138,12 @@ export default {
             height: 55px;
             &:before {
               content: '';
-              display: inline-block;
-              width: 55px;
-              height: 55px;
-              background: url('../images/mi-home.png') no-repeat center;
-              background-size: contain;
+              @include bgImg(55px, 55px, '../images/mi-home.png');
               transition: margin .2s;
             }
             &:after {
               content: '';
-              display: inline-block;
-              width: 55px;
-              height: 55px;
-              background: url('../images/mi-logo.png') no-repeat center;
-              background-size: contain;
+              @include bgImg(55px, 55px, '../images/mi-logo.png');
             }
             &:hover:before {
               margin-left: -55px;
@@ -134,6 +166,11 @@ export default {
               cursor: pointer;
             }
             &:hover {
+              color:#ff6600;
+            }
+            .children {
+              @include flex();
+              position: absolute;
             }
           }
         }
@@ -153,11 +190,7 @@ export default {
               box-sizing: border-box;
             }
             a {
-              display: inline-block;
-              width: 18px;
-              height: 18px;
-              background: url('../images/icon-search.png') no-repeat center;
-              background-size: contain;
+              @include bgImg(16px, 12px, '../images/icon-search.png');
               margin-left: 18px;
             }
           }
