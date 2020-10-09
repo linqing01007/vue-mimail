@@ -28,58 +28,13 @@
             <span>小米手机</span>
             <div class="children">
               <ul>
-                <li class="product">
+                <li class="product" v-for="(item, index) in productList" :key="index">
                   <a href="" target="_blank">
                     <div class="pro-image">
-                      <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="">
+                      <img :src="item.mainImage" alt="">
                     </div>
-                    <div class="pro-name">小米10至尊纪念版</div>
-                    <div class="pro-price">5299元</div>
-                  </a>
-                </li>
-                <li class="product">
-                  <a href="">
-                    <div class="pro-image">
-                      <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="">
-                    </div>
-                    <div class="pro-name">小米10至尊纪念版</div>
-                    <div class="pro-price">5299元</div>
-                  </a>
-                </li>
-                <li class="product">
-                  <a href="">
-                    <div class="pro-image">
-                      <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="">
-                    </div>
-                    <div class="pro-name">小米10至尊纪念版</div>
-                    <div class="pro-price">5299元</div>
-                  </a>
-                </li>
-                <li class="product">
-                  <a href="">
-                    <div class="pro-image">
-                      <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="">
-                    </div>
-                    <div class="pro-name">小米10至尊纪念版</div>
-                    <div class="pro-price">5299元</div>
-                  </a>
-                </li>
-                <li class="product">
-                  <a href="">
-                    <div class="pro-image">
-                      <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="">
-                    </div>
-                    <div class="pro-name">小米10至尊纪念版</div>
-                    <div class="pro-price">5299元</div>
-                  </a>
-                </li>
-                <li class="product">
-                  <a href="">
-                    <div class="pro-image">
-                      <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b11742a0be47f9d97bb6a13ea580018d.png?thumb=1&w=160&h=110&f=webp&q=90" alt="">
-                    </div>
-                    <div class="pro-name">小米10至尊纪念版</div>
-                    <div class="pro-price">5299元</div>
+                    <div class="pro-name">{{ item.name }}</div>
+                    <div class="pro-price">{{ item.price }}</div>
                   </a>
                 </li>
               </ul>
@@ -104,7 +59,26 @@
 </template>
 <script>
 export default {
-  name: 'nav-header'
+  name: 'nav-header',
+  data () {
+    return {
+      productList: []
+    }
+  },
+  methods: {
+    getProductList () {
+      this.axios.get('/products', {
+        params: {
+          categoryId: '100012'
+        }
+      }).then(res => {
+        this.productList = res.list.slice(0, 6)
+      })
+    }
+  },
+  mounted () {
+    this.getProductList()
+  }
 }
 </script>
 <style lang="scss">
@@ -193,14 +167,14 @@ export default {
               height: 0;
               opacity: 0;
               width: 1226px;
-              border-top: 1px solid #e5e5e5;
+              // border-top: 1px solid #e5e5e5;
               box-shadow: 0px 7px 6px 0px rgba(0, 0, 0, 0.11);
               overflow: hidden;
               transition: all .5s;
               // z-index: 10;
               // background-color: #ffffff;
               .product {
-                // position: relative;
+                position: relative;
                 float: left;
                 width: 16.6%;
                 height: 220px;
