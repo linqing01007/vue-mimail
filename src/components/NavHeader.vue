@@ -9,9 +9,10 @@
           <a href="javascript:;">协议规则</a>
         </div>
         <div class="topbar-user">
-          <a href="javascript:;">登录</a>
-          <a href="javascript:;">注册</a>
-          <a href="javascript:;" class="my-cart">
+          <a href="javascript:;" v-if="username">{{ username }}</a>
+          <a href="javascript:;" v-else @click="login()">登录</a>
+          <a href="javascript:;" v-if="username">我的订单</a>
+          <a href="javascript:;" class="my-cart" @click="goToCart()">
             <span class="icon-cart"></span>
             购物车(0)
           </a>
@@ -34,7 +35,7 @@
                       <img :src="item.mainImage" alt="">
                     </div>
                     <div class="pro-name">{{ item.name }}</div>
-                    <div class="pro-price">{{ item.price }}</div>
+                    <div class="pro-price">{{ item.price | currency}}</div>
                   </a>
                 </li>
               </ul>
@@ -45,6 +46,64 @@
           </div>
           <div class="item-menu">
             <span>电视</span>
+            <div class="children">
+              <ul>
+                <li class="product">
+                  <a href="javascript:;" target='_blank'>
+                    <div class="pro-image">
+                      <img src="../images/nav-img/nav-3-1.jpg" alt="">
+                    </div>
+                    <div class="pro-name">小米壁画电视</div>
+                    <div class="pro-price">6999</div>
+                  </a>
+                </li>
+                <li class="product">
+                  <a href="javascript:;" target='_blank'>
+                    <div class="pro-image">
+                      <img src="../images/nav-img/nav-3-2.jpg" alt="">
+                    </div>
+                    <div class="pro-name">小米壁画电视</div>
+                    <div class="pro-price">1999</div>
+                  </a>
+                </li>
+                <li class="product">
+                  <a href="javascript:;" target='_blank'>
+                    <div class="pro-image">
+                      <img src="../images/nav-img/nav-3-3.png" alt="">
+                    </div>
+                    <div class="pro-name">小米壁画电视</div>
+                    <div class="pro-price">6999</div>
+                  </a>
+                </li>
+                <li class="product">
+                  <a href="javascript:;" target='_blank'>
+                    <div class="pro-image">
+                      <img src="../images/nav-img/nav-3-4.jpg" alt="">
+                    </div>
+                    <div class="pro-name">小米壁画电视</div>
+                    <div class="pro-price">6999</div>
+                  </a>
+                </li>
+                <li class="product">
+                  <a href="javascript:;" target='_blank'>
+                    <div class="pro-image">
+                      <img src="../images/nav-img/nav-3-5.jpg" alt="">
+                    </div>
+                    <div class="pro-name">小米壁画电视</div>
+                    <div class="pro-price">6999</div>
+                  </a>
+                </li>
+                <li class="product">
+                  <a href="javascript:;" target='_blank'>
+                    <div class="pro-image">
+                      <img src="../images/nav-img/nav-3-6.png" alt="">
+                    </div>
+                    <div class="pro-name">小米壁画电视</div>
+                    <div class="pro-price">6999</div>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="header-search">
@@ -62,10 +121,20 @@ export default {
   name: 'nav-header',
   data () {
     return {
-      productList: []
+      productList: [],
+      username: 'jack'
+    }
+  },
+  filters: {
+    currency (val) {
+      if (!val) return '0.00'
+      return '￥' + val.toFixed(2) + '元'
     }
   },
   methods: {
+    loging () {
+      this.$router.push('/login')
+    },
     getProductList () {
       this.axios.get('/products', {
         params: {
@@ -74,6 +143,9 @@ export default {
       }).then(res => {
         this.productList = res.list.slice(0, 6)
       })
+    },
+    goToCart () {
+      this.$router.push('/cart')
     }
   },
   mounted () {
@@ -148,8 +220,9 @@ export default {
             color: #333333;
             font-weight: bold;
             font-size: 16px;
-            line-height: 16px;
+            line-height: 55px;
             margin-right: 20px;
+            height: 55px;
             span {
               cursor: pointer;
             }
