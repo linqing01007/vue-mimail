@@ -8,7 +8,14 @@
           <a href="javascript:;" class="icon-close" @click="$emit('cancel')"></a>
         </div>
         <div class="modal-body">
-          <slot name='body'></slot>
+          <todo-list :todos="todos">
+            <template v-slot:undo="{ undo }">
+              <span>{{ undo.text }}</span>
+            </template>
+            <template v-slot:done="{ done }">
+              <span>{{ done.text }}</span>
+            </template>
+          </todo-list>
         </div>
         <div class="modal-footer">
           <a href="javascript:;" class="btn" v-if="btnType=='1'" @click="$emit('submit')">{{ sureText }}</a>
@@ -23,8 +30,12 @@
   </transition>
 </template>
 <script>
+import TodoList from '@/components/TodoList'
 export default {
   name: 'model',
+  components: {
+    TodoList
+  },
   props: {
     // 弹框类型：小small，中middle，大large,表单form
     modalType: {
@@ -44,6 +55,32 @@ export default {
       default: '取消'
     },
     showModal: Boolean
+  },
+  data () {
+    return {
+      todos: [
+        {
+          id: '1',
+          text: '学习vue的slot概念以及使用场景',
+          isComplete: true
+        },
+        {
+          id: '2',
+          text: '学习慕课网的基于vue的小米商城课程',
+          isComplete: true
+        },
+        {
+          id: '3',
+          text: '每天的leetcode刷题',
+          isComplete: true
+        },
+        {
+          id: '4',
+          text: '学习python的request库',
+          isComplete: false
+        }
+      ]
+    }
   },
   methods: {
     cancel () {
