@@ -10,7 +10,7 @@ import OrderList from '../pages/OrderList'
 import OrderConfirm from '../pages/OrderConfirm'
 import OrderPay from '../pages/OrderPay'
 import User from '../pages/User'
-import UserLogin from '../pages/UserLogin'
+import Login from '../pages/Login'
 import UserSetting from '../pages/UserSetting'
 
 Vue.use(VueRouter)
@@ -79,16 +79,16 @@ const routes = [
     component: User,
     children: [
       {
-        path: 'login',
-        name: 'login',
-        component: UserLogin
-      },
-      {
         path: 'setting',
         name: 'setting',
         component: UserSetting
       }
     ]
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
   }
 ]
 

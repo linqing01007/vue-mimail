@@ -122,7 +122,7 @@ export default {
   data () {
     return {
       productList: [],
-      username: 'jack'
+      username: ''
     }
   },
   filters: {
@@ -132,7 +132,7 @@ export default {
     }
   },
   methods: {
-    loging () {
+    login () {
       this.$router.push('/login')
     },
     getProductList () {
