@@ -3,7 +3,7 @@
     <div class="header">
       <div class="container">
         <a href="javascript:;">
-          <img src="../images/mi-home.png" alt="">
+          <img src="../images/mi-logo.png" alt="">
           <div class="title">
             <h3>小米商城</h3>
             <p>让每个人都能享受科技的乐趣</p>
@@ -14,17 +14,22 @@
     <div class="wrapper">
       <div class="container">
         <div class="login-form">
-          <h4><span>账号登陆</span><span>扫码登陆</span></h4>
-          <div class="input">
-            <input type="text" placeholder="邮箱/手机号码/小米ID">
+          <div class="title">
+            <h4><span>账号登陆</span><span>扫码登陆</span></h4>
           </div>
           <div class="input">
-            <input type="password" placeholder="密码">
+            <input type="text" placeholder="邮箱/手机号码/小米ID" v-model="username">
           </div>
-          <a href="javascript:;" class="btn">登陆</a>
-          <a href="javascript:;" class="msg">手机短信登陆/注册</a>
-          <div class="help-info">
-            <a href="javascript:;">立即注册</a>
+          <div class="input">
+            <input type="password" placeholder="密码" v-model="password">
+          </div>
+          <div class="msg">
+            <a href="javascript:;" class="btn" @click="login">登陆</a>
+            <a href="javascript:;" class="sms" @click="register">手机短信登陆/注册</a>
+          </div>
+          <div class="reg">
+            <a href="javascript:;" @click="$router.push('/index')">立即注册</a>
+            <span>|</span>
             <a href="javascript:;">忘记密码?</a>
           </div>
         </div>
@@ -44,7 +49,28 @@
 </template>
 <script>
 export default {
-  name: 'userLogin'
+  name: 'userLogin',
+  data () {
+    return {
+      username: '',
+      password: '',
+      userId: ''
+    }
+  },
+  methods: {
+    login () {
+      const { username, password } = this
+      this.axios.post('/user/login', {
+        username,
+        password
+      }).then(() => {
+        this.$router.push('/index')
+      })
+    },
+    register () {
+      console.log('register')
+    }
+  }
 }
 </script>
 <style lang="scss">
@@ -90,6 +116,13 @@ export default {
         width: 410px;
         height: 510px;
         background-color: $colorG;
+        padding-left: 31px;
+        padding-right: 31px;
+        box-sizing: border-box;
+        .title {
+          margin-top: 40px;
+          margin-bottom: 20px;
+        }
         h4 {
           font-size: 24px;
           color: $colorC;
@@ -107,6 +140,50 @@ export default {
             &:last-child:after {
             display: none;
           }
+          }
+        }
+        .input {
+          display: inline-block;
+          margin-bottom: 20px;
+          width: 348px;
+          height: 50px;
+          border: 1px solid $colorH;
+          input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 18px;
+          }
+        }
+        .msg {
+          margin-top: 20px;
+          .btn {
+            width: 100%;
+            display: inline-block;
+            line-height: 50px;
+            font-size: 16px;
+          }
+          .sms {
+            margin-top: 8px;
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+            font-size: 14px;
+            color: #ff6600;
+          }
+        }
+        .reg {
+          margin-top: 18px;
+          font-size: 16px;
+          text-align: center;
+          a {
+            color: #999;
+            &:hover {
+              color: #ff6600;
+            }
+          }
+          span {
+            margin: 0 8px;
           }
         }
       }
