@@ -17,18 +17,28 @@
           <div class="title">
             <h4><span>账号登陆</span><span>扫码登陆</span></h4>
           </div>
-          <div class="input">
-            <input type="text" placeholder="邮箱/手机号码/小米ID" v-model="username">
-          </div>
-          <div class="input">
-            <input type="password" placeholder="密码" v-model="password">
-          </div>
+          <template v-if="userNameLogin">
+            <div class="input">
+              <input type="text" placeholder="邮箱/手机号码/小米ID" v-model="username">
+            </div>
+            <div class="input">
+              <input type="password" placeholder="密码" v-model="password">
+            </div>
+          </template>
+          <template v-else>
+            <div class="input">
+              <div class="country-list">+86</div><input type="text" placeholder="手机号码" class="phone-input">
+            </div>
+            <div class="input">
+              <input type="text" placeholder="短信验证码" class="code-input"><div class="code"><a href="javascript:;">获取验证码</a></div>
+            </div>
+          </template>
           <div class="msg">
             <a href="javascript:;" class="btn" @click="login">登陆</a>
-            <a href="javascript:;" class="sms" @click="register">手机短信登陆/注册</a>
+            <a href="javascript:;" class="sms" @click="loginByText">手机短信登陆/注册</a>
           </div>
           <div class="reg">
-            <a href="javascript:;" @click="$router.push('/index')">立即注册</a>
+            <a href="javascript:;" @click="register">立即注册</a>
             <span>|</span>
             <a href="javascript:;">忘记密码?</a>
           </div>
@@ -54,7 +64,8 @@ export default {
     return {
       username: '',
       password: '',
-      userId: ''
+      userId: '',
+      userNameLogin: false
     }
   },
   methods: {
@@ -69,6 +80,9 @@ export default {
     },
     register () {
       console.log('register')
+    },
+    loginByText () {
+      this.userNameLogin = !this.userNameLogin
     }
   }
 }
@@ -148,6 +162,35 @@ export default {
           width: 348px;
           height: 50px;
           border: 1px solid $colorH;
+          .country-list {
+            display: inline-block;
+            border-right: 1px solid #e0e0e0;
+            text-align: center;
+            width: 56px;
+            line-height: 50px;
+            height: 100%;
+            font-size: 14px;
+          }
+          .phone-input {
+            width: 290px;
+            height: 98%;
+          }
+          .code-input {
+            width: 235px;
+          }
+          .code {
+            // display: inline-block;
+            width: 111px;
+            height: 100%;
+            border-left: 1px solid #e0e0e0;
+            text-align: center;
+            line-height: 50px;
+            float: right;
+            font-size: 14px;
+            a {
+              color: #003ab5;
+            }
+          }
           input {
             width: 100%;
             height: 100%;
