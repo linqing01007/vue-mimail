@@ -8,5 +8,9 @@ export default {
   },
   saveCartCount (state, payload) {
     state.cartCount = payload.cartCount
+  },
+  userLogout (state) {
+    state.username = ''
+    state.cartCount = 0
   }
 }

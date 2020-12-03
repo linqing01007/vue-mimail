@@ -10,5 +10,8 @@ export default {
   },
   saveCartCount ({ commit }, payload) {
     commit('saveCartCount', payload.cartCount)
+  },
+  userLogout ({ commit }) {
+    commit('userLogout')
   }
 }
