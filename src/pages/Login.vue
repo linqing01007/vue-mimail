@@ -74,7 +74,11 @@ export default {
       this.axios.post('/user/login', {
         username,
         password
-      }).then(() => {
+      }).then((res) => {
+        this.$store.dispatch('saveUserName', {
+          username: res.username
+        })
+        this.$cookies.set('userId', res.id, { experiense: '1M' })
         this.$router.push('/index')
       })
     },

@@ -11,12 +11,16 @@ export default {
   name: 'app',
   data () {
     return {
-      res: {}
+      // res: {}
     }
   },
   mounted () {
-    axios.get('/user/login').then(res => {
-      this.res = res
+    axios.get('/user').then(res => {
+      // this.res = res
+      console.log('app.vue.get user: ', res)
+      this.$store.dispatch('saveUserName', {
+        username: res.username
+      })
     })
     storage.setItem('user', { name: 'nhq', age: 23 })
     storage.setItem('session', { name: 'test' })

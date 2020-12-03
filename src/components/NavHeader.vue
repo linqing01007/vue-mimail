@@ -121,8 +121,12 @@ export default {
   name: 'nav-header',
   data () {
     return {
-      productList: [],
-      username: ''
+      productList: []
+    }
+  },
+  computed: {
+    username () {
+      return this.$store.state.username
     }
   },
   filters: {

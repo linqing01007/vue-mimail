@@ -3,8 +3,11 @@ import router from './router/index'
 import axios from 'axios'
 import vueAxios from 'vue-axios'
 import App from './App.vue'
+import store from './store'
+import VueCookies from 'vue-cookies'
 
 Vue.use(vueAxios, axios)
+Vue.use(VueCookies)
 const mock = false
 if (mock) {
   require('./mock/api')
@@ -33,5 +36,6 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
