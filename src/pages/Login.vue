@@ -22,7 +22,7 @@
               <input type="text" placeholder="邮箱/手机号码/小米ID" v-model="username">
             </div>
             <div class="input">
-              <input type="password" placeholder="密码" v-model="password">
+              <input type="password" placeholder="密码" v-model="password" @keyup.enter="login">
             </div>
           </template>
           <template v-else>
@@ -65,7 +65,7 @@ export default {
       username: '',
       password: '',
       userId: '',
-      userNameLogin: false
+      userNameLogin: true
     }
   },
   methods: {
