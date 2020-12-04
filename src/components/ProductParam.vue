@@ -51,6 +51,10 @@
       a {
         color: $colorC;
       }
+      .btn {
+        margin-left: 10px;
+        color: $colorG;
+      }
     }
   }
 }

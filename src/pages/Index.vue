@@ -47,7 +47,7 @@
         </div>
         <swiper :options="swiperOptions">
           <swiper-slide v-for="(item, index) in sliderList" :key="index">
-            <a :href="'/product/'+item.id"><img v-bind:src="item.img"></a>
+            <a :href="'#/product/'+item.id"><img v-bind:src="item.img"></a>
           </swiper-slide>
           <div class="swiper-pagination" slot="pagination"></div>
           <div class="swiper-button-prev" slot="button-prev"></div>
@@ -60,7 +60,7 @@
         </a>
       </div>
       <div class="banner">
-        <a href="/product/30">
+        <a href="#/product/30">
           <img src="../images/banner-1.png" alt="">
         </a>
       </div>
