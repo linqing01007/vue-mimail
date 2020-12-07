@@ -35,6 +35,20 @@
           <!-- <div class="swiper-button-next" slot="button-next"></div> -->
         </swiper>
       </div>
+      <div class="item-video">
+        <h2>60帧超慢动作摄影
+        <br />慢慢回味每一瞬间的精彩</h2>
+        <p>后置960帧电影版超慢动作视频，将眨眼间的美妙展现得淋漓尽致！
+        <br />更能AI精准分析视频内容，15个场景智能匹配背景音效。</p>
+        <div class="video-bg" @click="showSlide='slideDown'"></div>
+        <div class="video-box" v-if="showSlide">
+          <div class="overlay"></div>
+          <div class="video" :class="showSlide">
+            <span class="icon-close" @click="closeVideo"></span>
+            <video src="../images/product/video.mp4" muted controls="controls" autoplay></video>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -60,7 +74,8 @@ export default {
         },
         pagination: {
           el: '.swiper-pagination'
-        }
+        },
+        loop: true
       },
       sliders: [
         {
@@ -75,12 +90,23 @@ export default {
           id: 3,
           img: require('../images/product/gallery-4.png')
         }
-      ]
+      ],
+      showSlide: ''
+    }
+  },
+  methods: {
+    closeVideo () {
+      this.showSlide = 'slideUp'
+      setTimeout(() => {
+        this.showSlide = ''
+      }, 600)
     }
   }
 }
 </script>
 <style lang="scss">
+  @import '../assets/scss/config.scss';
+  @import '../assets/scss/mixin.scss';
   .content {
     text-align: center;
     .item-bg {
@@ -141,6 +167,90 @@ export default {
     }
     .item-swiper {
       margin: 36px auto 52px;
+    }
+    .item-video {
+      height: 1044px;
+      background-color: $colorI;
+      text-align: center;
+      color: $colorG;
+      h2 {
+        font-size: 60px;
+        padding-top: 82px;
+        letter-spacing: 4px;
+      }
+      p {
+        font-size: 24px;
+        margin-bottom: 58px;
+      }
+      .video-bg {
+        background-image: url('../images/product/gallery-1.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 546px;
+        width: 1226px;
+        margin: 0 auto 120px;
+        cursor: pointer;
+      }
+      .video-box {
+        .overlay {
+          @include position(fixed);
+          background-color: $colorE;
+          z-index: 10;
+          opacity: .4;
+        }
+        @keyframes slideDown {
+          from {
+            top: -50%;
+            opacity: 0;
+          }
+          to {
+            top: 50%;
+            opacity: 1;
+          }
+        }
+        @keyframes slideUp {
+          from {
+            top: 50%;
+            opacity: 1;
+          }
+          to {
+            top: -50%;
+            opacity: 0;
+          }
+        }
+        .video {
+          position: fixed;
+          top: -50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 1000px;
+          height: 536px;
+          z-index: 11;
+          opacity: 1;
+          .icon-close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            @include bgImg(20px, 20px, '../images/icon-close.png');
+            z-index: 12;
+            cursor: pointer;
+          }
+          video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            outline: none;
+          }
+          &.slideDown {
+            top: 50%;
+            animation: slideDown .6s linear;
+          }
+          &.slideUp {
+            animation: slideUp .6s linear;
+          }
+        }
+      }
     }
   }
 </style>
