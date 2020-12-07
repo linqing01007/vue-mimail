@@ -124,7 +124,7 @@ export default {
   }
   .wrapper {
     background:url('../images/login-bg.jpg') no-repeat center;
-    // position: relative;
+    position: relative;
     .container {
       height: 576px;
       .login-form {

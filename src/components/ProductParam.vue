@@ -23,7 +23,7 @@
 @import '../assets/scss/mixin.scss';
 @import '../assets/scss/config.scss';
 .wrapper {
-  height: 70px;
+  // height: 70px;
   line-height: 70px;
   border-top: 1px solid $colorH;
   background-color: $colorG;
