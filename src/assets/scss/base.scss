@@ -15,4 +15,14 @@ input {
   outline: none;
   box-sizing: border-box;
 }
-
+.fl {
+  float: left
+}
+.fr {
+  float: right
+}
+.clearfix:after {
+  content: '';
+  display: block;
+  clear: both;
+}

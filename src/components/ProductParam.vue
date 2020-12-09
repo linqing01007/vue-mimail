@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="param-wrapper">
     <div class="container">
       <div class="pro-title">
         <h3>小米8 透明探索版</h3>
@@ -22,7 +22,7 @@
 <style lang="scss">
 @import '../assets/scss/mixin.scss';
 @import '../assets/scss/config.scss';
-.wrapper {
+.param-wrapper {
   // height: 70px;
   line-height: 70px;
   border-top: 1px solid $colorH;
