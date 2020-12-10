@@ -32,6 +32,7 @@ axios.interceptors.response.use(function (response) {
     }
   } else {
     alert(res.msg)
+    return Promise.reject(res)
   }
 })
 Vue.config.productionTip = false
