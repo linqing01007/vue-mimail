@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '../store'
 import VueRouter from 'vue-router'
 import Home from '../pages/Home.vue'
 import Index from '../pages/Index'
@@ -44,12 +45,18 @@ const routes = [
   {
     path: '/cart',
     name: 'cart',
-    component: Cart
+    component: Cart,
+    meta: {
+      requireAuth: true
+    }
   },
   {
     path: '/order',
     name: 'order',
     component: Order,
+    meta: {
+      requireAuth: true
+    },
     children: [
       {
         path: 'list',
@@ -77,6 +84,9 @@ const routes = [
     path: '/user',
     name: 'user',
     component: User,
+    meta: {
+      requireAuth: true
+    },
     children: [
       {
         path: 'setting',
@@ -96,6 +106,18 @@ const router = new VueRouter({
   // mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {
+    if (store.state.userId) {
+      next()
+    } else {
+      next({ path: '/login' })
+    }
+  } else {
+    next()
+  }
 })
 
 export default router
