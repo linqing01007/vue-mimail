@@ -110,7 +110,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
-    if (store.state.userId) {
+    if (store.state.username) {
       next()
     } else {
       next({ path: '/login' })
