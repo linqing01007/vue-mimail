@@ -108,16 +108,16 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requireAuth) {
-    if (store.state.username) {
-      next()
-    } else {
-      next({ path: '/login' })
-    }
-  } else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.meta.requireAuth) {
+//     if (store.state.username) {
+//       next()
+//     } else {
+//       next({ path: '/login' })
+//     }
+//   } else {
+//     next()
+//   }
+// })
 
 export default router
