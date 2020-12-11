@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import store from '../store'
+// import store from '../store'
 import VueRouter from 'vue-router'
 import Home from '../pages/Home.vue'
 import Index from '../pages/Index'
