@@ -13,6 +13,7 @@ import OrderPay from '../pages/OrderPay'
 import User from '../pages/User'
 import Login from '../pages/Login'
 import UserSetting from '../pages/UserSetting'
+import CartStatic from '../pages/CartStatic'
 
 Vue.use(VueRouter)
 
@@ -49,6 +50,11 @@ const routes = [
     meta: {
       requireAuth: true
     }
+  },
+  {
+    path: '/cart/static',
+    name: 'static',
+    component: CartStatic
   },
   {
     path: '/order',
