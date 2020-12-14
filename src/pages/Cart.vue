@@ -10,7 +10,7 @@
         <div class="content">
           <div class="nav-title">
             <div>
-              <a href="javascript:;" class="select"></a>
+              <a href="javascript:;" class="select" :class="{checked: selectedAll }" @click="toggleAll"></a>
               全选
             </div>
             <div class="name">商品名称</div>
@@ -20,30 +20,32 @@
             <div class="op">操作</div>
           </div>
           <div class="cart-list">
-            <div class="pro-info">
-              <div>
-                <a href="javascript:;" class="select"></a>
-              </div>
-              <div class="pro-name">
-                <img src="../images/item-box-3.jpg" alt="">
-                <span>小米8 6GB 全息幻彩紫 64Gb</span></div>
-              <div class="pro-price">1999元</div>
-              <div class="pro-count">
-                <div class="num-box">
-                  <a href="javascript:;">-</a>
-                  <span>1</span>
-                  <a href="javascript:;">+</a>
+            <template v-for="item in cartList">
+              <div class="pro-info" :key="item.id">
+                <div>
+                  <a href="javascript:;" class="select" :class="{ checked: item.productSelected }"></a>
                 </div>
+                <div class="pro-name">
+                  <img src="../images/item-box-3.jpg" alt="">
+                  <span>{{ item.productName }} {{ item.productSubtitle }}</span></div>
+                <div class="pro-price">{{ item.productPrice }}元</div>
+                <div class="pro-count">
+                  <div class="num-box">
+                    <a href="javascript:;" @click="updateProductAmount(item.productId, -1)">-</a>
+                    <span>{{ item.quantity }}</span>
+                    <a href="javascript:;" @click="updateProductAmount(item.productId, 1)">+</a>
+                  </div>
+                </div>
+                <div class="pro-total">{{ item.productTotalPrice }}元</div>
+                <div class="pro-op"></div>
               </div>
-              <div class="pro-total">1999元</div>
-              <div class="pro-op"></div>
-            </div>
+            </template>
           </div>
         </div>
         <div class="cart-footer clearfix">
           <div class="info">
             <a href="javascript:;">继续购物</a>
-            <span>共<span class="amount">1</span>件商品，已选择<span class="amount">1</span>件</span>
+            <span>共<span class="amount">{{ cartList.length }}</span>件商品，已选择<span class="amount">{{ selectedAmount }}</span>件</span>
           </div>
           <div class="total-price">
             合计：<span class="price">2599</span>元
@@ -66,6 +68,57 @@ export default {
     'order-header': OrderHeader,
     'nav-footer': NavFooter,
     ServiceBar
+  },
+  data () {
+    return {
+      cartList: [],
+      selectedAll: false,
+      cartTotalPrice: 0
+    }
+  },
+  computed: {
+    selectedAmount () {
+      return this.cartList.filter(val => val.productSelected).length
+    }
+  },
+  methods: {
+    updateCart (res) {
+      this.cartList = res.cartProductVoList
+      this.selectedAll = res.selectedAll
+      this.cartTotalPrice = res.cartTotalPrice
+    },
+    initCartList () {
+      this.axios.get('/carts').then(res => {
+        this.updateCart(res)
+      })
+    },
+    updateProductAmount (productId, amount) {
+      const products = this.cartList.filter(pro => pro.productId === productId)
+      if (products.length < 1) return
+      const product = products[0]
+      let quantity = Math.max(1, product.quantity + amount)
+      quantity = Math.min(product.productStock, quantity)
+      this.axios.put(`/carts/${productId}`, {
+        quantity,
+        selected: true
+      }).then(res => {
+        this.updateCart(res)
+      })
+    },
+    toggleAll () {
+      if (this.selectedAll) {
+        this.axios.put('/carts/unSelectAll').then(res => {
+          this.updateCart(res)
+        })
+      } else {
+        this.axios.put('/carts/selectAll').then(res => {
+          this.updateCart(res)
+        })
+      }
+    }
+  },
+  mounted () {
+    this.initCartList()
   }
 }
 </script>
@@ -83,6 +136,14 @@ export default {
         border: 1px solid #e5e5e5;
         vertical-align: middle;
         margin-right: 17px;
+      }
+      .checked {
+        background-image: url('../images/icon-gou.png');
+        background-position: center;
+        background-size: 16px 12px;
+        background-repeat: no-repeat;
+        background-color: #ff6600;
+        border: none;
       }
       .nav-title {
         display: flex;
