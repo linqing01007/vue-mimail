@@ -49,7 +49,7 @@
           </div>
           <div class="total-price">
             合计：<span class="price">2599</span>元
-            <div class="btn">去结算</div>
+            <div class="btn" @click='order'>去结算</div>
           </div>
         </div>
       </div>
@@ -115,6 +115,14 @@ export default {
           this.updateCart(res)
         })
       }
+    },
+    order () {
+      const checked = this.cartList.every(pro => !pro.productSelected)
+      if (checked) {
+        alert('请至少选择一个商品')
+        return
+      }
+      this.$router.push('/order/confirm')
     }
   },
   mounted () {

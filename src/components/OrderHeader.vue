@@ -43,6 +43,7 @@ export default {
     h2 {
       font-size: 28px;
       color: $colorB;
+      // font-weight: 300;
     }
     span {
       font-size: 14px;
