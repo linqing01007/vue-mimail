@@ -25,10 +25,10 @@
           <div class="item-address">
             <h2>收货地址</h2>
             <div class="addr-list clearfix">
-              <div class="addr-info">
-                <h3>收货人姓名</h3>
-                <div class="phone"></div>
-                <div class="street"></div>
+              <div class="addr-info" v-for="(item) in addrList" :key="item.id">
+                <h3>{{ item.receiverName }}</h3>
+                <div class="phone">{{ item.receiverMobile }}</div>
+                <div class="street">{{ `${item.receiverProvince} ${item.receiverProvince} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress}` }}</div>
                 <div class="action">
                   <a href="javascript:;" class="fl">
                     <svg class="icon icon-del"><use href="#icon-del"></use></svg>
@@ -38,7 +38,7 @@
                   </a>
                 </div>
               </div>
-              <div class="addr-add">
+              <div class="addr-add" @click="updateAddr">
                 <div class="icon-add"></div>
                 <div>添加新地址</div>
               </div>
@@ -101,49 +101,85 @@
     <modal
       title="新增确认"
       btnType="1"
-      :showModal="showEditModal"
-      @cancel="showEditModal=false"
+      :showModal="showModal"
+      @cancel="showModal=false"
     >
       <template v-slot:body>
-        <div class="edit-wrap">
-          <div class="item">
-            <input type="text" class="input" placeholder="姓名">
-            <input type="text" class="input" placeholder="手机号">
+        <template v-if="action===2">
+          <span>确认删除此商品吗？</span>
+        </template>
+        <template v-else>
+          <div class="edit-wrap">
+            <div class="item">
+              <input type="text" class="input" placeholder="姓名">
+              <input type="text" class="input" placeholder="手机号">
+            </div>
+            <div class="item">
+              <select name="province">
+                <option value="北京">北京</option>
+                <option value="天津">天津</option>
+                <option value="河北">河北</option>
+              </select>
+              <select name="city">
+                <option value="北京">北京</option>
+                <option value="天津">天津</option>
+                <option value="河北">石家庄</option>
+              </select>
+              <select name="district">
+                <option value="北京">昌平区</option>
+                <option value="天津">海淀区</option>
+                <option value="河北">东城区</option>
+                <option value="天津">西城区</option>
+                <option value="河北">顺义区</option>
+                <option value="天津">房山区</option>
+              </select>
+            </div>
+            <div class="item">
+              <textarea name="street"></textarea>
+            </div>
+            <div class="item">
+              <input type="text" class="input" placeholder="邮编">
+            </div>
           </div>
-          <div class="item">
-            <select name="province">
-              <option value="北京">北京</option>
-              <option value="天津">天津</option>
-              <option value="河北">河北</option>
-            </select>
-            <select name="city">
-              <option value="北京">北京</option>
-              <option value="天津">天津</option>
-              <option value="河北">石家庄</option>
-            </select>
-            <select name="district">
-              <option value="北京">昌平区</option>
-              <option value="天津">海淀区</option>
-              <option value="河北">东城区</option>
-              <option value="天津">西城区</option>
-              <option value="河北">顺义区</option>
-              <option value="天津">房山区</option>
-            </select>
-          </div>
-          <div class="item">
-            <textarea name="street"></textarea>
-          </div>
-          <div class="item">
-            <input type="text" class="input" placeholder="邮编">
-          </div>
-        </div>
+        </template>
       </template>
     </modal>
   </div>
 </template>
 <script>
+import Modal from '../components/Modal'
 export default {
-  name: 'orderConfirm'
+  name: 'orderConfirm',
+  components: {
+    Modal
+  },
+  data () {
+    return {
+      showModal: false,
+      action: 0, // 地址操作，0表示增加，1表示编辑，2表示删除
+      cartList: [], // 购物车列表
+      addrList: [] // 地址列表
+    }
+  },
+  methods: {
+    getAddressList () {
+      this.axios.get('/shippings', {
+        params: {
+          pageNum: 1,
+          pageSize: 10
+        }
+      }).then(res => {
+        this.addrList = res.list
+      })
+    },
+    updateAddr (action = 0) {
+      if (action === 0) {
+      }
+    }
+  },
+  mounted () {
+    this.getAddressList()
+  }
 }
 </script>
 <style lang='scss'>
