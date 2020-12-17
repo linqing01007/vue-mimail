@@ -14,12 +14,26 @@ export default {
       // res: {}
     }
   },
+  methods: {
+    getCartCount () {
+      this.$axios.get('/carts/Products/sum').then(res => {
+        this.$store.dispatch('saveCartCount', {
+          cartCount: res
+        })
+      })
+    }
+  },
   mounted () {
     axios.get('/user').then(res => {
       // this.res = res
       console.log('app.vue.get user: ', res)
       this.$store.dispatch('saveUserName', {
         username: res.username
+      })
+    })
+    this.axios.get('/carts/products/sum').then(res => {
+      this.$store.dispatch('saveCartCount', {
+        cartCount: res
       })
     })
     storage.setItem('user', { name: 'nhq', age: 23 })

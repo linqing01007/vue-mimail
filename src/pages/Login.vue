@@ -78,12 +78,26 @@ export default {
         this.$store.dispatch('saveUserName', {
           username: res.username
         })
-        this.$cookies.set('userId', res.id, { experiense: '1M' })
-        this.$router.push('/index')
+        this.$cookies.set('userId', res.id, { experiense: 'Session' })
+        this.$router.push({
+          name: 'index',
+          params: {
+            from: 'login'
+          }
+        })
       })
     },
     register () {
-      console.log('register')
+      const username = 'linqing'
+      const password = 'linqing'
+      const email = 'test@163.com'
+      this.axios.post('/user/register', {
+        username,
+        password,
+        email
+      }).then(() => {
+        console.log('注册成功')
+      })
     },
     loginByText () {
       this.userNameLogin = !this.userNameLogin

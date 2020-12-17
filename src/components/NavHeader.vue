@@ -9,12 +9,13 @@
           <a href="javascript:;">协议规则</a>
         </div>
         <div class="topbar-user">
-          <a href="javascript:;" class="username" v-if="username">{{ username }}<div class="logout"><a href="javascript:;" @click="logout">退出登陆</a></div></a>
+          <a href="javascript:;" class="username" v-if="username">{{ username }}</a>
           <a href="javascript:;" v-else @click="login()">登录</a>
+          <a href="javascript:;" v-if="username" @click="logout">退出登陆</a>
           <a href="javascript:;" v-if="username">我的订单</a>
           <a href="javascript:;" class="my-cart" @click="goToCart()">
             <span class="icon-cart"></span>
-            购物车(0)
+            购物车({{ cartCount }})
           </a>
         </div>
       </div>
@@ -127,6 +128,9 @@ export default {
   computed: {
     username () {
       return this.$store.state.username
+    },
+    cartCount () {
+      return this.$store.state.cartCount
     }
   },
   filters: {
@@ -140,7 +144,6 @@ export default {
       this.$router.push('/login')
     },
     logout () {
-      console.log('1111111111', 'logout')
       this.axios.post('/user/logout').then(() => {
         this.$cookies.remove('userId')
         this.$store.dispatch('userLogout')
@@ -158,10 +161,21 @@ export default {
     },
     goToCart () {
       this.$router.push('/cart')
+    },
+    getCartCount () {
+      this.axios.get('/carts/products/sum').then(res => {
+        this.$store.dispatch('saveCartCount', {
+          cartCount: res
+        })
+      })
     }
   },
   mounted () {
     this.getProductList()
+    // console.log('33333333333: navHeader mounted: ', this.$route.params)
+    if (this.$route.params.from === 'login') {
+      this.getCartCount()
+    }
   }
 }
 </script>
@@ -180,15 +194,6 @@ export default {
           display: inline-block;
           color: #b0b0b0;
           margin-right: 17px;
-        }
-        .logout {
-          position: absolute;
-          top: 30px;
-          right: 160px;
-          z-index: 12;
-          // display: none;
-          // border: 1px solid $colorD;
-          // cursor: pointer;
         }
         .my-cart {
           width: 110px;

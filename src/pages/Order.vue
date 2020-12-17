@@ -1,6 +1,6 @@
 <template>
   <div>
-    <order-header :title="title">
+    <order-header :title='title'>
       <template v-slot:tip>
         <span>{{ tip }}</span>
       </template>
@@ -24,29 +24,18 @@ export default {
       tip: ''
     }
   },
-  methods: {
-    initTitleTip () {
-      const pathTitleTip = {
-        list: {
-          title: '订单列表',
-          tip: '查看订单列表'
-        },
-        confirm: {
-          title: '确认订单',
-          tip: '请仔细确认订单信息'
-        },
-        pay: {
-          title: '支付订单',
-          tip: '请核对支付信息'
-        }
-      }
-      const path = this.$route.path.substring('/order/'.length)
-      this.title = pathTitleTip[path].title
-      this.tip = pathTitleTip[path].tip
-    }
-  },
   mounted () {
-    this.initTitleTip()
+    const path = this.$route.path
+    if (path === '/order/list') {
+      this.title = '订单列表'
+      this.tip = '请选择商品'
+    } else if (path === 'order/confirm') {
+      this.title = '订单确认'
+      this.tip = '请仔细确认收货地址'
+    } else {
+      this.title = '订单支付'
+      this.tip = ''
+    }
   }
 }
 </script>

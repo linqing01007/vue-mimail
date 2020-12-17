@@ -23,7 +23,7 @@
             <template v-for="item in cartList">
               <div class="pro-info" :key="item.id">
                 <div>
-                  <a href="javascript:;" class="select" :class="{ checked: item.productSelected }"></a>
+                  <a href="javascript:;" class="select" :class="{ checked: item.productSelected }" @click="updateProduct(item)"></a>
                 </div>
                 <div class="pro-name">
                   <img src="../images/item-box-3.jpg" alt="">
@@ -31,13 +31,13 @@
                 <div class="pro-price">{{ item.productPrice }}元</div>
                 <div class="pro-count">
                   <div class="num-box">
-                    <a href="javascript:;" @click="updateProductAmount(item.productId, -1)">-</a>
+                    <a href="javascript:;" @click="updateProduct(item, '-')">-</a>
                     <span>{{ item.quantity }}</span>
-                    <a href="javascript:;" @click="updateProductAmount(item.productId, 1)">+</a>
+                    <a href="javascript:;" @click="updateProduct(item, '+')">+</a>
                   </div>
                 </div>
                 <div class="pro-total">{{ item.productTotalPrice }}元</div>
-                <div class="pro-op"></div>
+                <div class="pro-op"><a href="javascript:;" class="icon-close" @click="confirm(item)"><i class="iconfont">x</i></a></div>
               </div>
             </template>
           </div>
@@ -48,32 +48,45 @@
             <span>共<span class="amount">{{ cartList.length }}</span>件商品，已选择<span class="amount">{{ selectedAmount }}</span>件</span>
           </div>
           <div class="total-price">
-            合计：<span class="price">2599</span>元
-            <div class="btn" @click='order'>去结算</div>
+            合计：<span class="price">{{ cartTotalPrice }}</span>元
+            <div class="btn" @click="order">去结算</div>
           </div>
         </div>
       </div>
     </div>
     <service-bar></service-bar>
     <nav-footer></nav-footer>
+    <modal title="删除商品" btnType="3" :showModal="showConfirm" @submit="delProduct" @cancel="cancel">
+      <template v-slot:body>
+        <span>确定删除吗？</span>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
 import NavFooter from '@/components/NavFooter'
 import OrderHeader from '@/components/OrderHeader'
 import ServiceBar from '@/components/ServiceBar'
+import Modal from '@/components/Modal'
+// import { debounce } from '@/util/util'
 export default {
   name: 'cart',
   components: {
     'order-header': OrderHeader,
     'nav-footer': NavFooter,
-    ServiceBar
+    ServiceBar,
+    Modal
   },
   data () {
     return {
+      // 购物车列表
       cartList: [],
+      // 是否全选中
       selectedAll: false,
-      cartTotalPrice: 0
+      // 选中商品的总价
+      cartTotalPrice: 0,
+      // 控制二次确认
+      showConfirm: false
     }
   },
   computed: {
@@ -92,18 +105,34 @@ export default {
         this.updateCart(res)
       })
     },
-    updateProductAmount (productId, amount) {
-      const products = this.cartList.filter(pro => pro.productId === productId)
-      if (products.length < 1) return
-      const product = products[0]
-      let quantity = Math.max(1, product.quantity + amount)
-      quantity = Math.min(product.productStock, quantity)
-      this.axios.put(`/carts/${productId}`, {
+    updateProduct (product, op) {
+      let quantity = product.quantity
+      let selected = product.productSelected
+      if (op === '+') {
+        quantity = Math.min(product.productStock, quantity + 1)
+      } else if (op === '-') {
+        quantity = Math.max(1, quantity - 1)
+      } else {
+        selected = !selected
+      }
+      this.axios.put(`/carts/${product.productId}`, {
         quantity,
-        selected: true
+        selected
       }).then(res => {
         this.updateCart(res)
       })
+    },
+    confirm (product) {
+      // 显示二次确认框时把选中的product缓存下来
+      this.productBedel = product
+      this.showConfirm = true
+    },
+    delProduct () {
+      const productId = this.productBedel.productId
+      this.axios.delete(`/carts/${productId}`).then(res => {
+        this.updateCart(res)
+      })
+      this.showConfirm = false
     },
     toggleAll () {
       if (this.selectedAll) {
@@ -117,16 +146,20 @@ export default {
       }
     },
     order () {
-      const checked = this.cartList.every(pro => !pro.productSelected)
+      const checked = this.cartList.every(val => !val.productSelected)
       if (checked) {
         alert('请至少选择一个商品')
         return
       }
       this.$router.push('/order/confirm')
+    },
+    cancel () {
+      this.showConfirm = false
     }
   },
   mounted () {
     this.initCartList()
+    // this.updateProduct = debounce(this._updateProduct)
   }
 }
 </script>
@@ -224,6 +257,24 @@ export default {
           }
           .pro-total {
             color: #ff6600;
+          }
+          .pro-op {
+            a {
+              display: inline-block;
+              width: 24px;
+              height: 24px;
+              border-radius: 50%;
+              color: #757575;
+              i {
+                font-style: normal;
+                line-height: 24px;
+                font-size: 16px;
+              }
+              &:hover {
+                color: #fff;
+                background-color: #ff6600;
+              }
+            }
           }
         }
       }
