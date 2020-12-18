@@ -30,15 +30,15 @@
                 <div class="phone">{{ item.receiverMobile }}</div>
                 <div class="street">{{ `${item.receiverProvince} ${item.receiverProvince} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress}` }}</div>
                 <div class="action">
-                  <a href="javascript:;" class="fl">
+                  <a href="javascript:;" class="fl" @click="updateAddr(2, item)">
                     <svg class="icon icon-del"><use href="#icon-del"></use></svg>
                   </a>
-                  <a href="javascript:;" class="fr">
+                  <a href="javascript:;" class="fr" @click="updateAddr(1, item)">
                     <svg class="icon icon-edit"><use href="#icon-edit"></use></svg>
                   </a>
                 </div>
               </div>
-              <div class="addr-add" @click="updateAddr">
+              <div class="addr-add" @click="updateAddr(0)">
                 <div class="icon-add"></div>
                 <div>添加新地址</div>
               </div>
@@ -100,9 +100,10 @@
     </div>
     <modal
       title="新增确认"
-      btnType="1"
+      :btnType="btnType"
       :showModal="showModal"
-      @cancel="showModal=false"
+      @cancel="cancel"
+      @submit="submit"
     >
       <template v-slot:body>
         <template v-if="action===2">
@@ -111,21 +112,24 @@
         <template v-else>
           <div class="edit-wrap">
             <div class="item">
-              <input type="text" class="input" placeholder="姓名">
-              <input type="text" class="input" placeholder="手机号">
+              <input type="text" class="input" placeholder="姓名" v-model="itemChecked.receiverName">
+              <input type="text" class="input" placeholder="手机号" v-model="itemChecked.receiverMobile">
             </div>
             <div class="item">
-              <select name="province">
+              <select name="province" v-model="itemChecked.receiverProvince">
+                <option value="" disabled>请选择</option>
                 <option value="北京">北京</option>
                 <option value="天津">天津</option>
                 <option value="河北">河北</option>
               </select>
-              <select name="city">
+              <select name="city" v-model="itemChecked.receiverCity">
+                <option value="" disabled>请选择</option>
                 <option value="北京">北京</option>
                 <option value="天津">天津</option>
                 <option value="河北">石家庄</option>
               </select>
-              <select name="district">
+              <select name="district" v-model="itemChecked.receiverDistrict">
+                <option value="" disabled>请选择</option>
                 <option value="北京">昌平区</option>
                 <option value="天津">海淀区</option>
                 <option value="河北">东城区</option>
@@ -135,10 +139,11 @@
               </select>
             </div>
             <div class="item">
-              <textarea name="street"></textarea>
+              <!-- <label for="street">街道</label> -->
+              <textarea name="street" v-model="itemChecked.receiverAddress" placeholder="请输入详细街道"></textarea>
             </div>
             <div class="item">
-              <input type="text" class="input" placeholder="邮编">
+              <input type="text" class="input" placeholder="邮编" v-model="itemChecked.receiverZip">
             </div>
           </div>
         </template>
@@ -157,6 +162,9 @@ export default {
     return {
       showModal: false,
       action: 0, // 地址操作，0表示增加，1表示编辑，2表示删除
+      btnType: '1', // modal的btnType
+      shippingId: 0, // 要修改的地址对应的id
+      itemChecked: {}, // 表单绑定数据
       cartList: [], // 购物车列表
       addrList: [] // 地址列表
     }
@@ -172,13 +180,79 @@ export default {
         this.addrList = res.list
       })
     },
-    updateAddr (action = 0) {
-      if (action === 0) {
+    clearItemChecked () {
+      this.itemChecked.receiverProvince = ''
+      this.itemChecked.receiverCity = ''
+      this.itemChecked.receiverDistrict = ''
+      this.itemChecked.receiverName = ''
+      this.itemChecked.receiverAddress = ''
+      this.itemChecked.receiverZip = ''
+      this.itemChecked.receiverMobile = ''
+    },
+    updateAddr (action = 0, item = {}) {
+      this.btnType = '1'
+      this.shippingId = item.id
+      this.action = action
+      this.showModal = true
+      if (action === 2) {
+        this.btnType = '3'
+      } else if (action === 1) {
+        this.itemChecked = Object.assign({}, item) // 这不能直接赋值，否则修改itemChecked时会影响到item
       }
+      // console.log('update addr: ', action, this.btnType)
+    },
+    submit () {
+      const { receiverName, receiverMobile, receiverProvince, receiverCity, receiverDistrict, receiverAddress, receiverZip } = this.itemChecked
+      if (!receiverName) {
+        console.log('请输入收货人的姓名')
+        return
+      }
+      if (!/\d{11}/.test(receiverMobile)) {
+        console.log('请输入正确格式的手机号码')
+        return
+      }
+      if (!receiverProvince || !receiverCity || !receiverDistrict || !receiverAddress) {
+        console.log('请选择正确的地址')
+        return
+      }
+      if (!receiverZip) {
+        console.log('请输入邮编')
+        return
+      }
+      const methods = ['post', 'put', 'delete']
+      const url = this.shippingId ? `/shippings/${this.shippingId}` : '/shippings'
+      this.axios({
+        method: methods[this.action],
+        url,
+        data: {
+          receiverName,
+          receiverMobile,
+          receiverProvince,
+          receiverCity,
+          receiverDistrict,
+          receiverAddress,
+          receiverZip
+        }
+      }).then(() => {
+        console.log('操作成功') // todo:使用element-ui的消息弹框
+        this.showModal = false
+        this.getAddressList()
+        this.clearItemChecked()
+      })
+    },
+    cancel () {
+      this.showModal = false
+      this.clearItemChecked()
     }
   },
   mounted () {
     this.getAddressList()
+  },
+  created () {
+    // this.clearItemChecked()
+    this.itemChecked.receiverProvince = ''
+    this.itemChecked.receiverCity = ''
+    this.itemChecked.receiverDistrict = ''
   }
 }
 </script>
@@ -330,34 +404,36 @@ export default {
         text-align: right;
       }
     }
-    .edit-wrap{
-      font-size:14px;
-      .item{
-        margin-bottom:15px;
-        .input{
-          display:inline-block;
-          width:283px;
-          height:40px;
-          line-height:40px;
-          padding-left:15px;
-          border:1px solid #E5E5E5;
-          &+.input{
-            margin-left:14px;
-          }
+  }
+  .edit-wrap{
+    font-size:14px;
+    .item{
+      margin-bottom:15px;
+      .input{
+        display:inline-block;
+        width:283px;
+        height:40px;
+        line-height:40px;
+        padding-left:15px;
+        border:1px solid #E5E5E5;
+        &+.input{
+          margin-left:14px;
         }
-        select{
-          height:40px;
-          line-height:40px;
-          border:1px solid #E5E5E5;
-          margin-right:15px;
-        }
-        textarea{
-          height:62px;
-          width:100%;
-          padding:13px 15px;
-          box-sizing:border-box;
-          border:1px solid #E5E5E5;
-        }
+      }
+      select{
+        width: 120px;
+        height:40px;
+        line-height:40px;
+        border:1px solid #E5E5E5;
+        margin-right:15px;
+        padding-left: 6px;
+      }
+      textarea{
+        height:62px;
+        width:100%;
+        padding:13px 15px;
+        box-sizing:border-box;
+        border:1px solid #E5E5E5;
       }
     }
   }
