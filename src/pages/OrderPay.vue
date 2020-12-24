@@ -57,18 +57,25 @@
         </div>
       </div>
     </div>
+    <scan-pay-code v-if="showCode"></scan-pay-code>
   </div>
 </template>
 <script>
+// import QRCode from 'qrcode'
+import ScanPayCode from '../components/ScanPayCode'
 export default {
   name: 'orderPay',
+  components: {
+    ScanPayCode
+  },
   data () {
     return {
       orderNo: this.$route.query.orderNo, // 订单编号
       orderItemVoList: [], // 订单商品列表
       orderShipping: {}, // 订单收货地址
       payment: 0, // 订单金额
-      payType: 0 // 支付方式，1为支付宝，2为微信，默认不选择
+      payType: 0, // 支付方式，1为支付宝，2为微信，默认不选择
+      showCode: false
     }
   },
   methods: {
@@ -82,6 +89,24 @@ export default {
     },
     pay (type) {
       this.payType = type
+      if (type === 1) {
+        window.open('/#/order/alipay?orderId=' + this.orderNo, '_blank')
+      } else {
+        // this.axios.post('/pay', {
+        //   orderId: this.orderNo,
+        //   orderName: 'vue-高仿小米商城',
+        //   amount: 0.01,
+        //   payType: 2
+        // }).then(res => {
+        //   // console.log('orderpay: ', res)
+        //   QRCode.toDataURL(res.content).then(url => {
+        //     console.log('orderpey wechat: ', url)
+        //   }).catch(error => {
+        //     console.log('orderpay wechat.error: ', error)
+        //   })
+        // })
+        this.showCode = true
+      }
     }
   },
   mounted () {
