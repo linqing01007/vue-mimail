@@ -25,7 +25,7 @@
           <div class="item-address">
             <h2>收货地址</h2>
             <div class="addr-list clearfix">
-              <div class="addr-info" v-for="(item) in addrList" :key="item.id">
+              <div class="addr-info" :class="{selected: selected===ind}" v-for="(item, ind) in addrList" :key="item.id" @click="selectAddr(ind)">
                 <h3>{{ item.receiverName }}</h3>
                 <div class="phone">{{ item.receiverMobile }}</div>
                 <div class="street">{{ `${item.receiverProvince} ${item.receiverProvince} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress}` }}</div>
@@ -47,13 +47,13 @@
           <div class="item-good">
             <h2>商品</h2>
             <ul>
-              <li>
+              <li v-for="item in cartList" :key="item.id">
                 <div class="good-name">
                   <img src="../images/item-box-3.jpg" alt="">
-                  <span>小米8 6GB 全息幻彩紫 64GB</span>
+                  <span>{{ item.productName }} {{ item.productSubtitle }}</span>
                 </div>
-                <div class="good-price">1999元x2</div>
-                <div class="good-total">1999元</div>
+                <div class="good-price">{{ item.productPrice }}元x{{ item.quantity }}</div>
+                <div class="good-total">{{ item.productTotalPrice }}元</div>
               </li>
             </ul>
           </div>
@@ -70,11 +70,11 @@
           <div class="detail">
             <p>
               <span>商品件数:</span>
-              <span class="detail-info">7件</span>
+              <span class="detail-info">{{ totalProductCount }}件</span>
             </p>
             <p>
               <span>商品总价:</span>
-              <span class="detail-info">999元</span>
+              <span class="detail-info">{{ cartTotalPrice }}元</span>
             </p>
             <p>
               <span>优惠活动:</span>
@@ -87,13 +87,13 @@
             <p class="total">
               <span>应付总额:</span>
               <span class="detail-info">
-                <em>6999</em>元
+                <em>{{ cartTotalPrice }}</em>元
               </span>
             </p>
           </div>
           <div class="btn-group">
             <a href="javascript:;" class="btn btn-large btn-default">返回购物车</a>
-            <a href="javascript:;" class="btn btn-large">去结算</a>
+            <a href="javascript:;" class="btn btn-large" @click="order">去结算</a>
           </div>
         </div>
       </div>
@@ -164,9 +164,16 @@ export default {
       action: 0, // 地址操作，0表示增加，1表示编辑，2表示删除
       btnType: '1', // modal的btnType
       shippingId: 0, // 要修改的地址对应的id
+      selected: 0, // 选中的地址index
       itemChecked: {}, // 表单绑定数据
       cartList: [], // 购物车列表
+      cartTotalPrice: 0, // 购物车总价格
       addrList: [] // 地址列表
+    }
+  },
+  computed: {
+    totalProductCount () {
+      return this.cartList.filter(p => p.productSelected).length
     }
   },
   methods: {
@@ -180,6 +187,12 @@ export default {
         this.addrList = res.list
       })
     },
+    getCartList () {
+      this.axios.get('/carts').then(res => {
+        this.cartList = res.cartProductVoList
+        this.cartTotalPrice = res.cartTotalPrice
+      })
+    },
     clearItemChecked () {
       this.itemChecked.receiverProvince = ''
       this.itemChecked.receiverCity = ''
@@ -189,7 +202,11 @@ export default {
       this.itemChecked.receiverZip = ''
       this.itemChecked.receiverMobile = ''
     },
+    selectAddr (ind) {
+      this.selected = ind
+    },
     updateAddr (action = 0, item = {}) {
+      // 根据操作类型更新地址信息
       this.btnType = '1'
       this.shippingId = item.id
       this.action = action
@@ -201,24 +218,33 @@ export default {
       }
       // console.log('update addr: ', action, this.btnType)
     },
-    submit () {
+    validateForm () {
       const { receiverName, receiverMobile, receiverProvince, receiverCity, receiverDistrict, receiverAddress, receiverZip } = this.itemChecked
       if (!receiverName) {
-        console.log('请输入收货人的姓名')
-        return
+        return [false, '请输入收货人的姓名']
       }
       if (!/\d{11}/.test(receiverMobile)) {
-        console.log('请输入正确格式的手机号码')
-        return
+        // console.log('请输入正确格式的手机号码')
+        return [false, '请输入正确格式的手机号码']
       }
       if (!receiverProvince || !receiverCity || !receiverDistrict || !receiverAddress) {
-        console.log('请选择正确的地址')
-        return
+        return [false, '请选择正确的地址']
       }
       if (!receiverZip) {
-        console.log('请输入邮编')
-        return
+        return [false, '请输入邮编']
       }
+      return [true, '']
+    },
+    submit () {
+      // 地址表单的提交
+      if (this.action !== 2) {
+        const [ret, msg] = this.validateForm()
+        if (!ret) {
+          this.$message.warning(msg)
+          return
+        }
+      }
+      const { receiverName, receiverMobile, receiverProvince, receiverCity, receiverDistrict, receiverAddress, receiverZip } = this.itemChecked
       const methods = ['post', 'put', 'delete']
       const url = this.shippingId ? `/shippings/${this.shippingId}` : '/shippings'
       this.axios({
@@ -234,19 +260,41 @@ export default {
           receiverZip
         }
       }).then(() => {
-        console.log('操作成功') // todo:使用element-ui的消息弹框
+        this.$message.success('操作成功！')
         this.showModal = false
         this.getAddressList()
         this.clearItemChecked()
       })
     },
     cancel () {
+      // 取消删除
       this.showModal = false
       this.clearItemChecked()
+    },
+    order () {
+      // 创建订单并跳转到支付确认页面
+      const addr = this.addrList[this.selected]
+      if (!addr) {
+        this.$message.error('请选择一个收货地址!')
+        return
+      }
+      const shippingId = addr.id
+      console.log('orderconfirm: ', this.selected, shippingId)
+      this.axios.post('/orders', {
+        shippingId
+      }).then(res => {
+        this.$router.push({
+          path: '/order/pay',
+          query: {
+            orderNo: res.orderNo
+          }
+        })
+      })
     }
   },
   mounted () {
     this.getAddressList()
+    this.getCartList()
   },
   created () {
     // this.clearItemChecked()
@@ -290,6 +338,9 @@ export default {
             cursor: pointer;
           }
           .addr-info {
+            &.selected {
+              border: 1px solid $colorA;
+            }
             h3 {
               height: 27px;
               font-size: 18px;

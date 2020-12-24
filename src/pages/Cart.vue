@@ -106,12 +106,17 @@ export default {
       })
     },
     updateProduct (product, op) {
+      // 商品数量的操作，'+', '-', 以及选择或不选择
       let quantity = product.quantity
       let selected = product.productSelected
       if (op === '+') {
         quantity = Math.min(product.productStock, quantity + 1)
       } else if (op === '-') {
-        quantity = Math.max(1, quantity - 1)
+        if (quantity - 1 <= 0) {
+          this.$message.warning('至少选择一件商品')
+          return
+        }
+        quantity = quantity - 1
       } else {
         selected = !selected
       }
@@ -131,8 +136,8 @@ export default {
       const productId = this.productBedel.productId
       this.axios.delete(`/carts/${productId}`).then(res => {
         this.updateCart(res)
+        this.showConfirm = false
       })
-      this.showConfirm = false
     },
     toggleAll () {
       if (this.selectedAll) {
@@ -148,7 +153,7 @@ export default {
     order () {
       const checked = this.cartList.every(val => !val.productSelected)
       if (checked) {
-        alert('请至少选择一个商品')
+        this.$message.warning('请至少选择一个商品')
         return
       }
       this.$router.push('/order/confirm')

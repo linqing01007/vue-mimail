@@ -10,6 +10,7 @@ import Order from '../pages/Order'
 import OrderList from '../pages/OrderList'
 import OrderConfirm from '../pages/OrderConfirm'
 import OrderPay from '../pages/OrderPay'
+import AliPay from '../pages/AliPay'
 import User from '../pages/User'
 import Login from '../pages/Login'
 import UserSetting from '../pages/UserSetting'
@@ -77,7 +78,7 @@ const routes = [
       {
         path: 'alipay',
         name: 'alipay',
-        component: Order
+        component: AliPay
       },
       {
         path: 'pay',
