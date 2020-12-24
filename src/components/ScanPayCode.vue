@@ -10,7 +10,8 @@
           <h3>微信支付</h3>
           <span class="icon-close"></span>
         </div>
-        <div class="img">
+        <div class="qrcode">
+          <img :src="img" alt="">
         </div>
         <div class="tip">
           <p>请用微信扫一扫</p>
@@ -22,7 +23,8 @@
 </template>
 <script>
 export default {
-  name: 'scanPayCode'
+  name: 'scanPayCode',
+  props: ['img']
 }
 </script>
 <style lang="scss">
@@ -73,13 +75,20 @@ export default {
           cursor: pointer;
         }
       }
-      .img {
-        width: 100%;
-        height: 300px;
-        background-image: url('../images/pay/icon-qrcode.png');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 237px 240px;
+      .qrcode {
+        text-align: center;
+        padding: 44px 0 26px;
+        // padding: ;
+        // width: 100%;
+        // height: 300px;
+        // background-image: url('../images/pay/icon-qrcode.png');
+        // background-repeat: no-repeat;
+        // background-position: center;
+        // background-size: 237px 240px;
+        img {
+          width: 237px;
+          height: 240px;
+        }
       }
       .tip {
         text-align: center;
