@@ -8,7 +8,7 @@
       <div class="img-code">
         <div class="title">
           <h3>微信支付</h3>
-          <span class="icon-close"></span>
+          <span class="icon-close" @click="close"></span>
         </div>
         <div class="qrcode">
           <img :src="img" alt="">
@@ -24,7 +24,13 @@
 <script>
 export default {
   name: 'scanPayCode',
-  props: ['img']
+  props: ['img'],
+  methods: {
+    close () {
+      console.log('scanPaycode.vue close')
+      this.$emit('closePay')
+    }
+  }
 }
 </script>
 <style lang="scss">

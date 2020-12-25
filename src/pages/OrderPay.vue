@@ -57,16 +57,31 @@
         </div>
       </div>
     </div>
-    <scan-pay-code v-if="showCode" :img="codeURL"></scan-pay-code>
+    <scan-pay-code v-if="showCode" :img="codeURL" @closePay="closePay"></scan-pay-code>
+    <modal
+     title="支付确认"
+     btnType="3"
+     :showModal="showPayModal"
+     sureText="查看订单"
+     cancelText="未支付"
+     @cancel="showPayModal=false"
+     @submit="goOrderList"
+    >
+      <template v-slot:body>
+        <p>您确认是否完成支付?</p>
+      </template>
+    </modal>
   </div>
 </template>
 <script>
 import QRCode from 'qrcode'
 import ScanPayCode from '../components/ScanPayCode'
+import Modal from '../components/Modal'
 export default {
   name: 'orderPay',
   components: {
-    ScanPayCode
+    ScanPayCode,
+    Modal
   },
   data () {
     return {
@@ -76,7 +91,9 @@ export default {
       payment: 0, // 订单金额
       payType: 0, // 支付方式，1为支付宝，2为微信，默认不选择
       showCode: false, // 控制是否显示微信二维码
-      codeURL: '' // 转换后的二维码图片
+      codeURL: '', // 转换后的二维码图片
+      showPayModal: false, // 是否显示二次支付确认弹框
+      T: '' // 轮询定时器id
     }
   },
   methods: {
@@ -101,14 +118,35 @@ export default {
         }).then(res => {
           // console.log('orderpay: ', res)
           QRCode.toDataURL(res.content).then(url => {
-            console.log('orderpey wechat: ', url)
+            // console.log('orderpey wechat: ', url)
             this.showCode = true
             this.codeURL = url
+            this.loopOrderState()
           }).catch(error => {
             console.log('orderpay wechat.error: ', error)
           })
         })
       }
+    },
+    goOrderList () {
+      this.$router.push('/order/list')
+    },
+    closePay () {
+      this.showCode = false
+      this.showPayModal = true
+      clearInterval(this.T)
+    },
+    // 轮询订单状态
+    loopOrderState () {
+      this.T = setInterval(() => {
+        this.axios.get(`orders/${this.orderNo}`).then(res => {
+          if (res.status === 20) {
+            // 未支付
+            clearInterval(this.T)
+            this.goOrderList()
+          }
+        })
+      }, 1000)
     }
   },
   mounted () {

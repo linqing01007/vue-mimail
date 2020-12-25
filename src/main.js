@@ -30,10 +30,16 @@ axios.interceptors.response.use(function (response) {
     if (window.location.hash !== '#/index') {
       window.location.href = '/#/login'
     }
+    return Promise.reject(res)
   } else {
     Message.warning(res)
     return Promise.reject(res)
   }
+}, (error) => {
+  // http错误在这里拦截
+  const res = error.res
+  alert(res)
+  return Promise.reject(res)
 })
 Vue.config.productionTip = false
 
