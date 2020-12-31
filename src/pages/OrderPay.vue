@@ -1,5 +1,11 @@
 <template>
   <div class="order-pay">
+    <order-header
+      title="订单支付">
+      <template v-slot:tip>
+        <span>谨防钓鱼诈骗</span>
+      </template>
+    </order-header>
     <div class="wrapper">
       <div class="container">
         <div class="header-box">
@@ -16,10 +22,10 @@
             </div>
             <div class="price-info">
               <p>应付总额：<em>{{ payment }}</em>元</p>
-              <p>订单详情<i class="icon-down"></i></p>
+              <p>订单详情<i class="icon-down" :class="{up: showDetail }" @click="showDetail=!showDetail"></i></p>
             </div>
           </div>
-          <div class="order-detail">
+          <div class="order-detail" v-if="showDetail">
             <div class="item">
               <div class="item-title">订单号：</div>
               <div class="item-info">{{ orderNo }}</div>
@@ -77,11 +83,13 @@
 import QRCode from 'qrcode'
 import ScanPayCode from '../components/ScanPayCode'
 import Modal from '../components/Modal'
+import OrderHeader from '../components/OrderHeader'
 export default {
   name: 'orderPay',
   components: {
     ScanPayCode,
-    Modal
+    Modal,
+    OrderHeader
   },
   data () {
     return {
@@ -93,6 +101,7 @@ export default {
       showCode: false, // 控制是否显示微信二维码
       codeURL: '', // 转换后的二维码图片
       showPayModal: false, // 是否显示二次支付确认弹框
+      showDetail: false, // 是否显示订单详情
       T: '' // 轮询定时器id
     }
   },
@@ -221,9 +230,6 @@ export default {
               &.up {
                 transform: rotate(180deg);
               }
-            }
-            .icon-up {
-              transform: rotate(180deg);
             }
           }
         }

@@ -19,6 +19,12 @@
         </symbol>
       </defs>
     </svg>
+    <order-header
+      title="订单确认">
+      <template v-slot:tip>
+        <span>谨防钓鱼诈骗</span>
+      </template>
+    </order-header>
     <div class="wrapper">
       <div class="container">
         <div class="order-box">

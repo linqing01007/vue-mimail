@@ -1,76 +1,211 @@
 <template>
   <div class="order-list">
-    <div class="wrapper">
-      <div class="container">
-        <h3>收货地址</h3>
-        <div class="addr-box">
-          <div class="add-addr addr-item"></div>
-          <div class="addr-item"></div>
-        </div>
-        <div class="order-info">
-          <div class="post">
-            <h3>配送方式</h3>
-            <span>包邮</span>
+    <order-header
+      title="订单列表">
+      <template v-slot:tip>
+        <span>谨防钓鱼诈骗</span>
+      </template>
+    </order-header>
+    <div class="container">
+      <loading v-if="loading"></loading>
+      <template v-for="order in orderList">
+        <div class="item" :key="order.orderNo">
+          <div class="item-title">
+            <div class="order-info">
+              <span>{{ order.createTime }}</span>
+              <span>{{ order.receiverName }}</span>
+              <span>订单号: {{ order.orderNo }}</span>
+              <span>{{order.paymentTypeDesc }}</span>
+            </div>
+            <div class="order-price">
+              <span>应付金额：<em>{{ order.payment | currency}}</em>元</span>
+            </div>
           </div>
-          <div class="bill">
-            <h3>发票</h3>
-            <span>电子发票</span>
-            <span>个人</span>
-            <span>商品明细</span>
-          </div>
-          <div class="amount">
-            <p><span class="amount-item">商品件数:</span><span class="amount-info">7件</span></p>
-            <p><span class="amount-item">商品总价:</span><span class="amount-info">999元</span></p>
-            <p><span class="amount-item">优惠活动:</span><span class="amount-info">9元</span></p>
-            <p><span class="amount-item">运费:</span><span class="amount-info">0元</span></p>
-            <p class="total"><span class="amount-item">应付总额:</span><span class="amount-info">69999元</span></p>
+          <div class="item-body">
+            <div class="pro-box">
+              <div class="pro" v-for="item in order.orderItemVoList" :key="item.productId">
+                <img :src="item.productImage" alt="">
+                <div class="info">
+                  <p>{{ item.productName }}</p>
+                  <p>{{ item.currentUnitPrice }}元 X {{ item.quantity }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="pay">
+              立即付款 >
+            </div>
           </div>
         </div>
-        <div class="order-op btn-group">
-          <a href="javascript:;" class="btn back">返回购物车</a>
-          <a href="javascript:;" class="btn">去结算</a>
-        </div>
+      </template>
+      <div class="more">
+        <!-- <div class="btn" @click="loadMoreByBtn" v-if="showBtn">加载更多</div>
+        <div class="tip" v-else>已无更多...</div> -->
+        <!-- <div class="infinite-scroll"
+          v-infinite-scroll="loadMoreByScroll"
+          infinite-scroll-disabled="busy"
+          infinite-scroll-distance="400"
+          v-if="false">
+          <img v-if="loading" src="../images/loading-svg/loading-spinning-bubbles.svg" alt="">
+        </div>  -->
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="total"
+            :pageSize="pageSize"
+            @current-change="handleChange"></el-pagination>
       </div>
     </div>
   </div>
 </template>
 <script>
+import OrderHeader from '../components/OrderHeader'
+import Loading from '../components/Loading'
+import infiniteScroll from 'vue-infinite-scroll'
+import { Pagination } from 'element-ui'
 export default {
-  name: 'rderList'
+  name: 'oderList',
+  components: {
+    Loading,
+    OrderHeader,
+    [Pagination.name]: Pagination
+  },
+  data () {
+    return {
+      orderList: [], // 订单列表数据
+      // pageSize: 5, // 请求订单列表的每页数据量
+      pageNum: 1, // 请求订单列表的页数
+      showBtn: true, // 是否显示加载更多按钮
+      busy: true, // 控制是否禁止滚动加载
+      loading: true,
+      total: 0, // 分页器总数量
+      pageSize: 10 // 分页器每页数量，请求订单列表的每页数据量
+    }
+  },
+  directives: {
+    infiniteScroll
+  },
+  methods: {
+    initOrderList () {
+      this.axios.get('/orders', {
+        params: {
+          pageSize: this.pageSize,
+          pageNum: this.pageNum
+        }
+      }).then(res => {
+        this.loading = false
+        this.orderList = res.list
+        this.showBtn = res.hasNextPage
+        this.busy = !res.hasNextPage
+        this.total = res.pages
+      })
+    },
+    loadMoreByBtn () {
+      // 【加载更多】按钮
+      this.pageNum++
+      this.initOrderList()
+    },
+    // 专门给滚动加载使用的
+    initList () {
+      this.pageNum++
+      this.axios.get('/orders', {
+        params: {
+          pageSize: this.pageSize,
+          pageNum: this.pageNum
+        }
+      }).then(res => {
+        this.orderList = this.orderList.concat(res.list)
+        this.loading = false
+        this.busy = !res.hasNextPage
+      })
+    },
+    loadMoreByScroll () {
+      // 滚动加载更多
+      this.busy = true
+      this.loading = true
+      setTimeout(() => {
+        this.initList()
+      }, 500)
+    },
+    handleChange (pageNum) {
+      this.pageNum = pageNum
+      this.initOrderList()
+    }
+  },
+  filters: {
+    formatTime (timeStr) {
+      return timeStr
+    },
+    currency (payment) {
+      return payment.toFixed(2)
+    }
+  },
+  mounted () {
+    this.initOrderList()
+    // this.initList = this.getInitList()
+    // window.addEventListener('scroll', this.loadMoreByScroll)
+  }
 }
 </script>
 <style lang='scss'>
+@import '../assets/scss/config.scss';
 .order-list {
-  .wrapper {
-    background-color: #d7d7d7;
-    padding-top: 30px;
-    .container {
-      background-color: #fff;
-      padding: 30px 50px;
-      box-sizing: border-box;
-      h3 {
-        font-size: 20px;
-        font-weight: 400;
-      }
-      .addr-box {
-        margin-top: 10px;
+  .container {
+    margin-bottom: 80px;
+    .item {
+      border: 1px solid $colorA;
+      margin-top: 20px;
+      background-color: $colorG;
+      .item-title {
+        background-color: hsl(50, 65%, 77%);
+        padding: 0 20px;
+        height: 50px;
+        // opacity: .2;
+        font-size: 14px;
+        line-height: 50px;
         display: flex;
-        // justify-content: ;
-        .addr-item {
-          width: 200px;
-          height: 200px;
-          border: 1px solid #e5e5e5;
-          margin-left: 20px;
-          &:first-child {
-            margin-left: 0;
-          }
+        justify-content: space-between;
+        span {
+          margin-left: 8px;
+        }
+        em {
+          font-style: normal;
+          font-size: 18px;
         }
       }
-      .order-info {
-        margin-top: 60px;
-        border-top: 1px solid #e5e5e5;
-        border-bottom: 1px solid #e5e5e5;
-        padding: 30px 0;
+      .item-body {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        img {
+          width: 50px;
+          height: 50px;
+          vertical-align: middle;
+        }
+        .info {
+          display: inline-block;
+          vertical-align: middle;
+          margin-left: 20px;
+        }
+        .pay {
+          color: $colorA;
+          cursor: pointer;
+        }
+      }
+    }
+    .more {
+      text-align: right;
+      margin-top: 30px;
+      .btn {
+        margin: 30px auto;
+      }
+      .tip {
+        font-size: 14px;
+        // text-align: center;
+      }
+      .el-pagination.is-background .el-pager li:not(.disabled).active {
+        background-color: $colorA;
       }
     }
   }
