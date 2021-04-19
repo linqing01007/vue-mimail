@@ -1,29 +1,28 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
   <router-view></router-view>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
 // import HelloWorld from './components/HelloWorld.vue'
-import { onMounted } from 'vue'
-// import { testAxios } from './api/test'
-import storage from './storage'
-export default {
+
+export default defineComponent({
   name: 'App',
   components: {
     // HelloWorld
-  },
-  setup () {
-    onMounted(() => {
-      // testAxios()
-      storage.set('user', 'name', 'nhq')
-      console.log('app...', storage.get('user', 'name'))
-    })
   }
-}
+})
 </script>
 
-<style>
+<style lang="scss">
 @import './assets/scss/reset.scss';
+@import './assets/scss/base.scss';
+// #app {
+//   font-family: Avenir, Helvetica, Arial, sans-serif;
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+//   text-align: center;
+//   color: #2c3e50;
+//   margin-top: 60px;
+// }
 </style>

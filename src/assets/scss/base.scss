@@ -1,0 +1,57 @@
+@import './config.scss';
+input {
+  outline: none;
+  box-shadow: none;
+  border: none;
+  padding: 10px;
+}
+.container {
+  width: 1226px;
+  margin: 0 auto;
+}
+.btn {
+  cursor: pointer;
+  width: 216px;
+  background-color: $colorA;
+  color: $colorG;
+  font-size: 14px;
+}
+.logo {
+  // display: inline-block;
+  width: 55px;
+  height: 55px;
+  a {
+    display: inline-block;
+    position: relative;
+    width: 55px;
+    height: 55px;
+    background-color: $colorA;
+    overflow: hidden;
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      background-size: contain;
+      transition: all .5s;
+    }
+    &:before {
+      top: 0;
+      left: 0;
+      background: url('./assets/images/mi-logo.png') no-repeat center;
+    }
+    &:after {
+      top: 0;
+      left: 55px;
+      background: url('./assets/images/mi-home.png') no-repeat center;
+    }
+    &:hover:before {
+      // transform: translate(-55px);
+      left: -55px;
+    }
+    &:hover:after {
+      // transform: translate(-55px)
+      left: 0;
+    }
+  }
+}

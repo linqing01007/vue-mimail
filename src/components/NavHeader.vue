@@ -154,41 +154,6 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        .logo {
-          width: 55px;
-          height: 55px;
-          background-color: $colorA;
-          a {
-            position: relative;
-            display: inline-block;
-            width: 55px;
-            height: 55px;
-            overflow: hidden;
-            &:before, &:after {
-              content: '';
-              width: 55px;
-              height: 55px;
-              position: absolute;
-              background-size: contain;
-              left: 0;
-              top: 0;
-              transition: all .5s;
-            }
-            &:before {
-              background: url('../assets/images/mi-home.png') no-repeat center;
-            }
-            &:after {
-              background: url('../assets/images/mi-logo.png') no-repeat center;
-              margin-left: 55px;
-            }
-            &:hover:after {
-              margin-left: 0;
-            }
-            &:hover:before {
-              margin-left: -55px;
-            }
-          }
-        }
         .menu {
           // width: 634px;
           margin-left: -150px;
