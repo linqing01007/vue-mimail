@@ -1,5 +1,5 @@
 <template>
-  <div class="param-wrapper">
+  <div class="param-wrapper" :class="{ fixed: fixed }">
     <div class="container">
       <div class="pro-title">
         <h3>小米8 透明探索版</h3>
@@ -19,6 +19,29 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  name: 'productParam',
+  data () {
+    return {
+      fixed: false
+    }
+  },
+  methods: {
+    onScroll () {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      this.fixed = !(scrollTop <= 170)
+      console.log('>>>>>>>>>>>productparam scroll')
+    }
+  },
+  mounted () {
+    window.addEventListener('scroll', this.onScroll)
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.onScroll, true)
+  }
+}
+</script>
 <style lang="scss">
 @import '../assets/scss/mixin.scss';
 @import '../assets/scss/config.scss';
@@ -28,6 +51,12 @@
   border-top: 1px solid $colorH;
   background-color: $colorG;
   z-index: 10;
+  &.fixed {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    text-align: center;
+  }
   .container {
     @include flex();
     .pro-title {

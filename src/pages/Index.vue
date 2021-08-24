@@ -70,7 +70,7 @@
           <h2>手机</h2>
           <div class="wrapper">
             <div class="banner-left">
-              <a href="/product/35">
+              <a href="#/product/35">
                 <img src="../images/mix-alpha.jpg" alt="">
               </a>
             </div>
@@ -369,6 +369,9 @@ export default {
     },
     goToCart () {
       this.$router.push('/cart')
+    },
+    goDetail (id) {
+      this.$router.push('/detail/' + id)
     }
   }
 }
