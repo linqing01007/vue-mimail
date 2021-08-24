@@ -15,7 +15,7 @@
       <div class="container">
         <div class="login-form">
           <div class="title">
-            <h4><span>账号登陆</span><span>扫码登陆</span></h4>
+            <h4><span @click="loginByText(true)">账号登陆</span><span @click="loginByText(false)">扫码登陆</span></h4>
           </div>
           <template v-if="userNameLogin">
             <div class="input">
@@ -96,11 +96,13 @@ export default {
         password,
         email
       }).then(() => {
-        console.log('注册成功')
+        this.username = username
+        this.password = password
+        this.login()
       })
     },
-    loginByText () {
-      this.userNameLogin = !this.userNameLogin
+    loginByText (flag) {
+      this.userNameLogin = flag
     }
   }
 }

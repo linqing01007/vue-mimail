@@ -218,10 +218,10 @@ export default {
         height: 112px;
         @include flex();
         .header-logo {
-          display: inline-block;
+          // display: inline-block;
         }
         .header-menu {
-          display: inline-block;
+          // display: inline-block;
           width: 643px;
           padding-left: 209px;
           .item-menu {
@@ -315,7 +315,8 @@ export default {
             }
             a {
               @include bgImg(16px, 12px, '../images/icon-search.png');
-              margin-left: 18px;
+              margin-left: auto;
+              margin-right: auto;
             }
           }
         }

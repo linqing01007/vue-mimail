@@ -27,12 +27,13 @@ axios.interceptors.response.use(function (response) {
   if (res.status === 0) {
     return res.data
   } else if (res.status === 10) {
+    // 需要登录
     if (window.location.hash !== '#/index') {
       window.location.href = '/#/login'
     }
     return Promise.reject(res)
   } else {
-    Message.warning(res)
+    Message.warning(res.msg || res)
     return Promise.reject(res)
   }
 }, (error) => {
