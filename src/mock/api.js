@@ -28,6 +28,10 @@ Mock.mock('/api/user/login', 'post', (options) => {
   }
 })
 
+Mock.mock('/api/user/logout', 'post', {
+  status: 0
+})
+
 Mock.mock(/\/api\/products\?/, 'get', (options) => {
   console.log('mock api/products?categoryId= && pageSize=')
   return {
@@ -87,6 +91,28 @@ Mock.mock(/\/api\/products\?/, 'get', (options) => {
           mainImage:
             'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/41c566d825a3ae3b5751a78d4c7cffdb.png',
           price: 3699.0,
+          status: 1,
+          imageHost: 'http://img.springboot.cn'
+        },
+        {
+          id: 35,
+          categoryId: 100012,
+          name: '小米MIX Alpha',
+          subtitle: '5G环绕屏概念手机',
+          mainImage:
+            'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5d19da60f9f62eb2aa5dcdbd7df19f0f.png',
+          price: 19999.0,
+          status: 1,
+          imageHost: 'http://img.springboot.cn'
+        },
+        {
+          id: 35,
+          categoryId: 100012,
+          name: '小米MIX Alpha',
+          subtitle: '5G环绕屏概念手机',
+          mainImage:
+            'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/5d19da60f9f62eb2aa5dcdbd7df19f0f.png',
+          price: 19999.0,
           status: 1,
           imageHost: 'http://img.springboot.cn'
         },
@@ -275,7 +301,7 @@ Mock.mock('/api/carts', 'get', (options) => {
   }
 })
 
-Mock.mock('/api/carts', 'put', (options) => {
+Mock.mock(/\/api\/carts\/.+/, 'put', (options) => {
   console.log('mock api/carts put')
   return {
     status: 0,
@@ -283,7 +309,7 @@ Mock.mock('/api/carts', 'put', (options) => {
       cartProductVoList: [
         {
           productId: 36,
-          quantity: 2,
+          quantity: Mock.Random.integer(2, 8),
           productName: 'Redmi Note 8 Pro',
           productSubtitle: '6400万全场景四摄',
           productMainImage:
@@ -329,8 +355,49 @@ Mock.mock('/api/carts', 'put', (options) => {
   }
 })
 
-Mock.mock('/api/carts', 'delete', (options) => {
+Mock.mock(/\/api\/carts\/.+/, 'delete', (options) => {
   console.log('mock api/carts delete')
+  return {
+    status: 0,
+    data: {
+      cartProductVoList: [
+        {
+          productId: 37,
+          quantity: Mock.Random.integer(1, 6),
+          productName: 'Redmi Note 8',
+          productSubtitle: '千元4800万四摄',
+          productMainImage:
+            'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/4c87947d104ee5833913e4c520108f16.jpg',
+          productPrice: 999.0,
+          productStatus: 1,
+          productTotalPrice: 999.0,
+          productStock: 9999999,
+          productSelected: true
+        },
+        {
+          productId: 38,
+          quantity: 1,
+          productName: 'Redmi K20 Pro 尊享版',
+          productSubtitle: '骁龙855 Plus， 弹出全面屏',
+          productMainImage:
+            'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8737a33c78a94bc36afb860ab23b3939.jpg',
+          productPrice: 2699.0,
+          productStatus: 1,
+          productTotalPrice: 2699.0,
+          productStock: 9999999,
+          productSelected: true
+        }
+      ],
+      cartTotalPrice: 3698.0,
+      imageHost: 'http://img.springboot.cn',
+      selectedAll: true,
+      cartTotalQuantity: 2
+    }
+  }
+})
+
+Mock.mock('/api/carts/selectAll', 'put', options => {
+  console.log('mock api carts selectall put')
   return {
     status: 0,
     data: {
@@ -370,86 +437,51 @@ Mock.mock('/api/carts', 'delete', (options) => {
   }
 })
 
-Mock.mock('/api/carts/selectAll', 'put', {
-  status: 0,
-  data: {
-    cartProductVoList: [
-      {
-        productId: 37,
-        quantity: 1,
-        productName: 'Redmi Note 8',
-        productSubtitle: '千元4800万四摄',
-        productMainImage:
-          'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/4c87947d104ee5833913e4c520108f16.jpg',
-        productPrice: 999.0,
-        productStatus: 1,
-        productTotalPrice: 999.0,
-        productStock: 9999999,
-        productSelected: true
-      },
-      {
-        productId: 38,
-        quantity: 1,
-        productName: 'Redmi K20 Pro 尊享版',
-        productSubtitle: '骁龙855 Plus， 弹出全面屏',
-        productMainImage:
-          'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8737a33c78a94bc36afb860ab23b3939.jpg',
-        productPrice: 2699.0,
-        productStatus: 1,
-        productTotalPrice: 2699.0,
-        productStock: 9999999,
-        productSelected: true
-      }
-    ],
-    cartTotalPrice: 3698.0,
-    imageHost: 'http://img.springboot.cn',
-    selectedAll: true,
-    cartTotalQuantity: 2
-  }
-})
-
-Mock.mock('/api/carts/unSelectAll', 'put', {
-  status: 0,
-  data: {
-    cartProductVoList: [
-      {
-        productId: 37,
-        quantity: 1,
-        productName: 'Redmi Note 8',
-        productSubtitle: '千元4800万四摄',
-        productMainImage:
-          'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/4c87947d104ee5833913e4c520108f16.jpg',
-        productPrice: 999.0,
-        productStatus: 1,
-        productTotalPrice: 999.0,
-        productStock: 9999999,
-        productSelected: false
-      },
-      {
-        productId: 38,
-        quantity: 1,
-        productName: 'Redmi K20 Pro 尊享版',
-        productSubtitle: '骁龙855 Plus， 弹出全面屏',
-        productMainImage:
-          'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8737a33c78a94bc36afb860ab23b3939.jpg',
-        productPrice: 2699.0,
-        productStatus: 1,
-        productTotalPrice: 2699.0,
-        productStock: 9999999,
-        productSelected: false
-      }
-    ],
-    cartTotalPrice: 0,
-    imageHost: 'http://img.springboot.cn',
-    selectedAll: false,
-    cartTotalQuantity: 2
+Mock.mock('/api/carts/unSelectAll', 'put', options => {
+  console.log('mock api carts unselectall')
+  return {
+    status: 0,
+    data: {
+      cartProductVoList: [
+        {
+          productId: 37,
+          quantity: 1,
+          productName: 'Redmi Note 8',
+          productSubtitle: '千元4800万四摄',
+          productMainImage:
+            'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/4c87947d104ee5833913e4c520108f16.jpg',
+          productPrice: 999.0,
+          productStatus: 1,
+          productTotalPrice: 999.0,
+          productStock: 9999999,
+          productSelected: false
+        },
+        {
+          productId: 38,
+          quantity: 1,
+          productName: 'Redmi K20 Pro 尊享版',
+          productSubtitle: '骁龙855 Plus， 弹出全面屏',
+          productMainImage:
+            'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8737a33c78a94bc36afb860ab23b3939.jpg',
+          productPrice: 2699.0,
+          productStatus: 1,
+          productTotalPrice: 2699.0,
+          productStock: 9999999,
+          productSelected: false
+        }
+      ],
+      cartTotalPrice: 0,
+      imageHost: 'http://img.springboot.cn',
+      selectedAll: false,
+      cartTotalQuantity: 2
+    }
   }
 })
 
 // 购物车相关 end
 
 // 获取地址列表
-Mock.mock('/api/shippings', 'get', {
+Mock.mock(/\/api\/shippings?.+/, 'get', {
   status: 0,
   data: {
     total: 2,
@@ -503,7 +535,7 @@ Mock.mock('/api/shippings', 'get', {
 })
 
 // 修改地址
-Mock.mock(/\/api\/shippings\/\d*/, 'post', { status: 0, data: '更新地址成功' })
+Mock.mock(/\/api\/shippings/, 'post', { status: 0, data: '更新地址成功' })
 
 // 增加地址
 Mock.mock(/\/api\/shippings\/\d*/, 'put', {
@@ -1133,7 +1165,7 @@ Mock.mock(/\/api\/orders\/\d+/, 'get', (options) => {
 
 // 微信支付
 Mock.mock('/api/pay', 'post', (options) => {
-  const payType = getPostData(options, 'payType')
+  const payType = getPostData(options.body, 'payType')
   if (payType === 1) {
     return {
       status: 0,

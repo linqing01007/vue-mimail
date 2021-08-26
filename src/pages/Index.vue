@@ -349,8 +349,8 @@ export default {
           pageSize: 14
         }
       }).then(res => {
-        this.productList = [res.list.slice(6, 10), res.list.slice(10)]
-        console.log('>>>>>>>get productlist', this.productList.length)
+        this.productList = [res.list.slice(0, 4), res.list.slice(4)]
+        console.log('>>>>>>>get productlist', res.list.length)
       })
     },
     addCart (productId) {

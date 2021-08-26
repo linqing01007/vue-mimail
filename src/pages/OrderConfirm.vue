@@ -159,10 +159,12 @@
 </template>
 <script>
 import Modal from '../components/Modal'
+import OrderHeader from '../components/OrderHeader.vue'
 export default {
   name: 'orderConfirm',
   components: {
-    Modal
+    Modal,
+    OrderHeader
   },
   data () {
     return {

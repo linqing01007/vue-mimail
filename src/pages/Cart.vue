@@ -23,7 +23,7 @@
             <template v-for="item in cartList">
               <div class="pro-info" :key="item.id">
                 <div>
-                  <a href="javascript:;" class="select" :class="{ checked: item.productSelected }" @click="updateProduct(item)"></a>
+                  <a href="javascript:;" class="select" :class="{ checked: item.productSelected }" @click="toggleAll()"></a>
                 </div>
                 <div class="pro-name">
                   <img src="../images/item-box-3.jpg" alt="">
@@ -140,6 +140,7 @@ export default {
       })
     },
     toggleAll () {
+      console.log('togger all call')
       if (this.selectedAll) {
         this.axios.put('/carts/unSelectAll').then(res => {
           this.updateCart(res)
