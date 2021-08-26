@@ -350,6 +350,7 @@ export default {
         }
       }).then(res => {
         this.productList = [res.list.slice(6, 10), res.list.slice(10)]
+        console.log('>>>>>>>get productlist', this.productList.length)
       })
     },
     addCart (productId) {

@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     getCartCount () {
-      this.$axios.get('/carts/Products/sum').then(res => {
+      this.$axios.get('/carts/products/sum').then(res => {
         this.$store.dispatch('saveCartCount', {
           cartCount: res
         })
