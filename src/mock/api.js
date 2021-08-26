@@ -12,7 +12,7 @@ const getPostData = function (dataStr, name) {
   return ''
 }
 
-Mock.mock('/api/user/login', 'post', options => {
+Mock.mock('/api/user/login', 'post', (options) => {
   console.log('mock api user login post')
   return {
     status: 0,
@@ -28,7 +28,7 @@ Mock.mock('/api/user/login', 'post', options => {
   }
 })
 
-Mock.mock(/\/api\/products\?/, 'get', options => {
+Mock.mock(/\/api\/products\?/, 'get', (options) => {
   console.log('mock api/products?categoryId= && pageSize=')
   return {
     status: 0,
@@ -123,7 +123,7 @@ Mock.mock(/\/api\/products\?/, 'get', options => {
 })
 
 // 商品详情Detail
-Mock.mock(/\/api\/products\/\d+/, 'get', options => {
+Mock.mock(/\/api\/products\/\d+/, 'get', (options) => {
   console.log('mock api/products/id')
   return {
     status: 0,
@@ -167,7 +167,7 @@ Mock.mock('/api/user', 'get', {
 
 Mock.mock('/api/carts/products/sum', 'get', { status: 0, data: 2 })
 
-Mock.mock('/api/carts', 'post', options => {
+Mock.mock('/api/carts', 'post', (options) => {
   console.log('mock api/carts post')
   return {
     status: 0,
@@ -221,7 +221,7 @@ Mock.mock('/api/carts', 'post', options => {
   }
 })
 
-Mock.mock('/api/carts', 'get', options => {
+Mock.mock('/api/carts', 'get', (options) => {
   console.log('mock api/carts get')
   return {
     status: 0,
@@ -275,7 +275,7 @@ Mock.mock('/api/carts', 'get', options => {
   }
 })
 
-Mock.mock('/api/carts', 'put', options => {
+Mock.mock('/api/carts', 'put', (options) => {
   console.log('mock api/carts put')
   return {
     status: 0,
@@ -329,7 +329,7 @@ Mock.mock('/api/carts', 'put', options => {
   }
 })
 
-Mock.mock('/api/carts', 'delete', options => {
+Mock.mock('/api/carts', 'delete', (options) => {
   console.log('mock api/carts delete')
   return {
     status: 0,
@@ -513,10 +513,13 @@ Mock.mock(/\/api\/shippings\/\d*/, 'put', {
 })
 
 // 删除地址
-Mock.mock(/\/api\/shippings\/\d*/, 'delete', { status: 0, data: '删除地址成功' })
+Mock.mock(/\/api\/shippings\/\d*/, 'delete', {
+  status: 0,
+  data: '删除地址成功'
+})
 
 // 创建订单
-Mock.mock('/api/orders', 'post', options => {
+Mock.mock('/api/orders', 'post', (options) => {
   console.log('mock api/orders post')
   return {
     status: 0,
@@ -575,7 +578,7 @@ Mock.mock('/api/orders', 'post', options => {
 })
 
 // 订单列表
-Mock.mock(/\/api\/orders\?/, 'get', options => {
+Mock.mock(/\/api\/orders\?/, 'get', (options) => {
   console.log('mock api/orders/? get 订单列表')
   return {
     status: 0,
@@ -1081,7 +1084,7 @@ Mock.mock(/\/api\/orders\?/, 'get', options => {
 })
 
 // 获取订单信息
-Mock.mock(/\/api\/orders\/\d+/, 'get', options => {
+Mock.mock(/\/api\/orders\/\d+/, 'get', (options) => {
   console.log('mock api/orders/d+ get 订单详情')
   return {
     status: 0,
@@ -1129,7 +1132,7 @@ Mock.mock(/\/api\/orders\/\d+/, 'get', options => {
 })
 
 // 微信支付
-Mock.mock('/api/pay', 'post', options => {
+Mock.mock('/api/pay', 'post', (options) => {
   const payType = getPostData(options, 'payType')
   if (payType === 1) {
     return {
