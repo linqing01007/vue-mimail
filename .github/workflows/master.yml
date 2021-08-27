@@ -38,7 +38,7 @@ jobs:
         run: npm i
       - name: Generate Pages
         run: |
-          npm run docs:build
+          npm run build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
