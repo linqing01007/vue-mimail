@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath:'/vue-mimail/',
   devServer: {
     host: 'localhost', // 使用npm run serve 启动的服务器地址
     port: 8080,  // 监听的端口号，默认8080
