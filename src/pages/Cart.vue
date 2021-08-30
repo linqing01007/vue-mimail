@@ -23,7 +23,7 @@
             <template v-for="item in cartList">
               <div class="pro-info" :key="item.id">
                 <div>
-                  <a href="javascript:;" class="select" :class="{ checked: item.productSelected }" @click="toggleAll()"></a>
+                  <a href="javascript:;" class="select" :class="{ checked: item.productSelected }" @click="updateProduct(item)"></a>
                 </div>
                 <div class="pro-name">
                   <img src="../images/item-box-3.jpg" alt="">
@@ -109,16 +109,23 @@ export default {
       // 商品数量的操作，'+', '-', 以及选择或不选择
       let quantity = product.quantity
       let selected = product.productSelected
-      if (op === '+') {
-        quantity = Math.min(product.productStock, quantity + 1)
-      } else if (op === '-') {
-        if (quantity - 1 <= 0) {
-          this.$message.warning('至少选择一件商品')
-          return
-        }
-        quantity = quantity - 1
-      } else {
-        selected = !selected
+      switch (op) {
+        case '+':
+          quantity += 1
+          if (quantity > product.productStock) {
+            this.$message.warning('该商品库存不足')
+            return
+          }
+          break
+        case '-':
+          quantity -= 1
+          if (quantity <= 0) {
+            this.$message.warning('至少选择一件商品')
+            return
+          }
+          break
+        default:
+          selected = !selected
       }
       this.axios.put(`/carts/${product.productId}`, {
         quantity,
@@ -133,10 +140,12 @@ export default {
       this.showConfirm = true
     },
     delProduct () {
-      const productId = this.productBedel.productId
+      const productId = this.productBedel?.productId
+      if (!productId) return
       this.axios.delete(`/carts/${productId}`).then(res => {
         this.updateCart(res)
         this.showConfirm = false
+        this.productBedel = null
       })
     },
     toggleAll () {

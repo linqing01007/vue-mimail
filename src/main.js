@@ -11,7 +11,7 @@ Vue.use(vueAxios, axios)
 Vue.use(VueCookies)
 // Vue.use(Message)
 Vue.prototype.$message = Message
-const mock = true
+const mock = false
 if (mock) {
   require('./mock/api')
 }

@@ -36,15 +36,15 @@
                 <div class="phone">{{ item.receiverMobile }}</div>
                 <div class="street">{{ `${item.receiverProvince} ${item.receiverProvince} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress}` }}</div>
                 <div class="action">
-                  <a href="javascript:;" class="fl" @click="updateAddr(2, item)">
+                  <a href="javascript:;" class="fl" @click="updateAddr('delete', item)">
                     <svg class="icon icon-del"><use href="#icon-del"></use></svg>
                   </a>
-                  <a href="javascript:;" class="fr" @click="updateAddr(1, item)">
+                  <a href="javascript:;" class="fr" @click="updateAddr('put', item)">
                     <svg class="icon icon-edit"><use href="#icon-edit"></use></svg>
                   </a>
                 </div>
               </div>
-              <div class="addr-add" @click="updateAddr(0)">
+              <div class="addr-add" @click="updateAddr('post')">
                 <div class="icon-add"></div>
                 <div>添加新地址</div>
               </div>
@@ -105,15 +105,15 @@
       </div>
     </div>
     <modal
-      title="新增确认"
+      :title="modalTitle"
       :btnType="btnType"
       :showModal="showModal"
       @cancel="cancel"
       @submit="submit"
     >
       <template v-slot:body>
-        <template v-if="action===2">
-          <span>确认删除此商品吗？</span>
+        <template v-if="action==='delete'">
+          <span>确认删除此地址吗？</span>
         </template>
         <template v-else>
           <div class="edit-wrap">
@@ -160,6 +160,10 @@
 <script>
 import Modal from '../components/Modal'
 import OrderHeader from '../components/OrderHeader.vue'
+// 定义地址操作的常量
+const ADD_ADDR = 'poat'
+const EDIT_ADDR = 'put'
+const DEL_ADDR = 'delete'
 export default {
   name: 'orderConfirm',
   components: {
@@ -169,7 +173,8 @@ export default {
   data () {
     return {
       showModal: false,
-      action: 0, // 地址操作，0表示增加，1表示编辑，2表示删除
+      modalTitle: '',
+      action: ADD_ADDR, // 地址操作，0表示增加，1表示编辑，2表示删除
       btnType: '1', // modal的btnType
       shippingId: 0, // 要修改的地址对应的id
       selected: 0, // 选中的地址index
@@ -202,13 +207,7 @@ export default {
       })
     },
     clearItemChecked () {
-      this.itemChecked.receiverProvince = ''
-      this.itemChecked.receiverCity = ''
-      this.itemChecked.receiverDistrict = ''
-      this.itemChecked.receiverName = ''
-      this.itemChecked.receiverAddress = ''
-      this.itemChecked.receiverZip = ''
-      this.itemChecked.receiverMobile = ''
+      this.itemChecked = {}
     },
     selectAddr (ind) {
       this.selected = ind
@@ -219,59 +218,66 @@ export default {
       this.shippingId = item.id
       this.action = action
       this.showModal = true
-      if (action === 2) {
+      if (action === ADD_ADDR) {
+        this.title = '新增地址'
+        this.itemChecked = {}
+      } else if (action === DEL_ADDR) {
+        this.title = '删除地址'
         this.btnType = '3'
-      } else if (action === 1) {
+      } else if (action === EDIT_ADDR) {
+        this.title = '修改地址'
         this.itemChecked = Object.assign({}, item) // 这不能直接赋值，否则修改itemChecked时会影响到item
       }
       // console.log('update addr: ', action, this.btnType)
     },
     validateForm () {
       const { receiverName, receiverMobile, receiverProvince, receiverCity, receiverDistrict, receiverAddress, receiverZip } = this.itemChecked
+      let ret = true
+      let msg = ''
       if (!receiverName) {
-        return [false, '请输入收货人的姓名']
+        ret = false
+        msg = '请输入收货人的姓名'
+        return { ret, msg }
       }
       if (!/\d{11}/.test(receiverMobile)) {
         // console.log('请输入正确格式的手机号码')
-        return [false, '请输入正确格式的手机号码']
+        ret = false
+        msg = '请输入正确格式的手机号码'
+        return { ret, msg }
       }
       if (!receiverProvince || !receiverCity || !receiverDistrict || !receiverAddress) {
-        return [false, '请选择正确的地址']
+        ret = false
+        msg = '请选择正确的地址'
+        return { ret, msg }
       }
       if (!receiverZip) {
-        return [false, '请输入邮编']
+        ret = false
+        msg = '请输入邮编'
+        return { ret, msg }
       }
-      return [true, '']
+      return { ret, msg }
     },
     submit () {
       // 地址表单的提交
-      if (this.action !== 2) {
-        const [ret, msg] = this.validateForm()
+      if (this.action !== DEL_ADDR) {
+        const { ret, msg } = this.validateForm()
         if (!ret) {
           this.$message.warning(msg)
           return
         }
       }
-      const { receiverName, receiverMobile, receiverProvince, receiverCity, receiverDistrict, receiverAddress, receiverZip } = this.itemChecked
-      const methods = ['post', 'put', 'delete']
+      // const { receiverName, receiverMobile, receiverProvince, receiverCity, receiverDistrict, receiverAddress, receiverZip } = this.itemChecked
+      // const methods = ['post', 'put', 'delete']
       const url = this.shippingId ? `/shippings/${this.shippingId}` : '/shippings'
       this.axios({
-        method: methods[this.action],
+        method: this.action,
         url,
-        data: {
-          receiverName,
-          receiverMobile,
-          receiverProvince,
-          receiverCity,
-          receiverDistrict,
-          receiverAddress,
-          receiverZip
-        }
+        data: this.itemChecked
       }).then(() => {
         this.$message.success('操作成功！')
         this.showModal = false
-        this.getAddressList()
         this.clearItemChecked()
+        this.getAddressList()
       })
     },
     cancel () {

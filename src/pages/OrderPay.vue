@@ -125,7 +125,7 @@ export default {
           amount: 0.01,
           payType: 2
         }).then(res => {
-          // console.log('orderpay: ', res)
+          console.log('orderpay: ', res)
           QRCode.toDataURL(res.content).then(url => {
             // console.log('orderpey wechat: ', url)
             this.showCode = true
